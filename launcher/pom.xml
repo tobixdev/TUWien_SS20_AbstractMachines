@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.oracle</groupId>
-    <artifactId>simplelanguage-parent</artifactId>
+    <artifactId>ringelnatter-parent</artifactId>
     <version>20.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>launcher</artifactId>
@@ -39,7 +39,7 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-              <finalName>sl-launcher</finalName>
+              <finalName>rngl-launcher</finalName>
               <artifactSet>
                 <excludes>
                   <exclude>junit:junit</exclude>
