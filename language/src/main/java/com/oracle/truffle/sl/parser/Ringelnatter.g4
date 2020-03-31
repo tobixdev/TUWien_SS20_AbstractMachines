@@ -82,12 +82,19 @@ tokens { INDENT, DEDENT }
 * Parser Rules
 */
 
-ringelnatter: EOF;
+ringelnatter: (function | NEWLINE)* EOF;
 
-expression: arithmetic ('.' arithmetic)*;
+function: 'fn' IDENTIFIER '(' IDENTIFIER? (',' IDENTIFIER)* '):' suite;
+
+suite: NEWLINE INDENT (stmnt NEWLINE)+ DEDENT;
+
+stmnt: 'let' IDENTIFIER '=' expression |
+       'ret' expression;
+
+expression: arithmetic;
 arithmetic: term (op=('+' | '-') term)*;
 term: factor (op=('*' | '/') factor)*;
-factor: NUMERIC_LITERAL | IDENTIFIER;
+factor: NUMERIC_LITERAL | IDENTIFIER | '(' expression ')';
 
 /*
 * Lexer Rules. Thanks to https://github.com/antlr/grammars-v4/blob/master/python/python3/Python3.g4 for indent handling.
@@ -101,6 +108,7 @@ fragment TAB : '\t';
 
 IDENTIFIER : LETTER (LETTER | DIGIT)*;
 NUMERIC_LITERAL : DIGIT+;
+WS: SPACES -> skip;
 
 NEWLINE
  : ( {atStartOfInput()}?   SPACES
