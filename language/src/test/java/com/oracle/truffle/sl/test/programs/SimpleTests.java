@@ -58,4 +58,15 @@ public class SimpleTests extends RingelnatterProgramTest {
                 "\tret a\n");
         assertThat (result, is("10"));
     }
+
+    @Test
+    public void returnComplexVariables() {
+        String result = executeProgram("fn main():\n" +
+                "\tlet a = 100\n" +
+                "\tlet b = a * 3\n" +
+                "\tlet c = a + b\n" +
+                "\tlet d = 50\n" +
+                "\tret c - d\n");
+        assertThat (result, is("350"));
+    }
 }
