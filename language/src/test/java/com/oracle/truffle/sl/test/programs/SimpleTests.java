@@ -50,4 +50,12 @@ public class SimpleTests extends RingelnatterProgramTest {
                 "\tret (10 - 3 * 2) + 4\n");
         assertThat (result, is("8"));
     }
+
+    @Test
+    public void returnVariable() {
+        String result = executeProgram("fn main():\n" +
+                "\tlet a = 10\n" +
+                "\tret a\n");
+        assertThat (result, is("10"));
+    }
 }

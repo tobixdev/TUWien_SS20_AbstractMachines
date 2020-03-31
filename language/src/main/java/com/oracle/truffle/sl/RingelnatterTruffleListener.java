@@ -184,11 +184,12 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
     }
 
     private void verifyExistenceOfLocal(LexicalScope scope, TerminalNode node, boolean shouldExist) {
-        if (scope.locals.containsKey(node.getText()) == shouldExist) {
+        if (scope.locals.containsKey(node.getText()) != shouldExist) {
             Token symbol = node.getSymbol();
             int beginChar = symbol.getCharPositionInLine();
             int endChar = beginChar + node.getText().length();
-            throw new RingelnatterParseError(source, symbol.getLine(), beginChar, endChar, "The local variable '" + node.getText() + "' does not exist");
+            String reason = shouldExist ? " does not exist" : " was already defined";
+            throw new RingelnatterParseError(source, symbol.getLine(), beginChar, endChar, "The local variable '" + node.getText() + "' " + reason + ".");
         }
     }
 
