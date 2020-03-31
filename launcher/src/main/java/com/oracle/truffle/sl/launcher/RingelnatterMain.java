@@ -55,7 +55,7 @@ import org.graalvm.polyglot.Value;
 
 public final class RingelnatterMain {
 
-    private static final String SL = "sl";
+    private static final String RNGL = "rngl";
 
     /**
      * The main entry point.
@@ -76,10 +76,10 @@ public final class RingelnatterMain {
 
         if (file == null) {
             // @formatter:off
-            source = Source.newBuilder(SL, new InputStreamReader(System.in), "<stdin>").build();
+            source = Source.newBuilder(RNGL, new InputStreamReader(System.in), "<stdin>").build();
             // @formatter:on
         } else {
-            source = Source.newBuilder(SL, new File(file)).build();
+            source = Source.newBuilder(RNGL, new File(file)).build();
         }
 
         System.exit(executeSource(source, System.in, System.out, options));
@@ -89,7 +89,7 @@ public final class RingelnatterMain {
         Context context;
         PrintStream err = System.err;
         try {
-            context = Context.newBuilder(SL).in(in).out(out).options(options).build();
+            context = Context.newBuilder(RNGL).in(in).out(out).options(options).build();
         } catch (IllegalArgumentException e) {
             err.println(e.getMessage());
             return 1;
@@ -98,7 +98,7 @@ public final class RingelnatterMain {
 
         try {
             Value result = context.eval(source);
-            if (context.getBindings(SL).getMember("main") == null) {
+            if (context.getBindings(RNGL).getMember("main") == null) {
                 err.println("No function main() defined in SL source file.");
                 return 1;
             }

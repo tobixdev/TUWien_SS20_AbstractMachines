@@ -1,8 +1,5 @@
 package com.oracle.truffle.sl.test.programs;
 
-import com.oracle.truffle.sl.RingelnatterLanguage;
-import org.graalvm.polyglot.Context;
-import org.graalvm.polyglot.Value;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
