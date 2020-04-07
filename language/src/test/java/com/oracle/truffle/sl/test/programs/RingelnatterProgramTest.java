@@ -9,4 +9,8 @@ public class RingelnatterProgramTest {
         Context context = Context.create();
         return context.eval(RingelnatterLanguage.ID, program).toString();
     }
+
+    protected String executeExpression(String s) {
+        return executeProgram("fn main():\n" + "\tret " + s + "\n");
+    }
 }

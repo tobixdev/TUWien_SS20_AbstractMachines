@@ -11,9 +11,6 @@ import com.oracle.truffle.sl.RingelnatterLanguage;
 import com.oracle.truffle.sl.RingelnatterRootNode;
 import com.oracle.truffle.sl.nodes.*;
 import com.oracle.truffle.sl.nodes.expression.*;
-import com.oracle.truffle.sl.parser.RingelnatterBaseListener;
-import com.oracle.truffle.sl.parser.RingelnatterParseError;
-import com.oracle.truffle.sl.parser.RingelnatterParser;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -125,7 +122,33 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
     }
 
     private ExpressionNode parseExpression(RingelnatterParser.ExpressionContext context) {
-        return parseArithmetic(context.arithmetic());
+        return parseLogicalTerm(context.logical_term());
+    }
+
+    private ExpressionNode parseLogicalTerm(RingelnatterParser.Logical_termContext context){
+        ExpressionNode leftOp = parseLogicalFactor(context.logical_factor(0));
+
+        if(context.logical_factor().size() == 1)
+            return leftOp;
+
+        for (int i = 1; i < context.logical_factor().size(); i++) {
+            ExpressionNode rightOp = parseLogicalFactor(context.logical_factor(i));
+            leftOp = createBinary(context.op.getText(), leftOp, rightOp);
+        }
+        return leftOp;
+    }
+
+    private ExpressionNode parseLogicalFactor(RingelnatterParser.Logical_factorContext context){
+        ExpressionNode leftOp = parseArithmetic(context.arithmetic(0));
+
+        if(context.arithmetic().size() == 1)
+            return leftOp;
+
+        for (int i = 1; i < context.arithmetic().size(); i++) {
+            ExpressionNode rightOp = parseArithmetic(context.arithmetic(i));
+            leftOp = createBinary(context.op.getText(), leftOp, rightOp);
+        }
+        return leftOp;
     }
 
     private ExpressionNode parseArithmetic(RingelnatterParser.ArithmeticContext context){
@@ -136,7 +159,7 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
 
         for (int i = 1; i < context.term().size(); i++) {
             ExpressionNode rightOp = parseTerm(context.term(i));
-            leftOp = createBinary(context.op.getText().charAt(0), leftOp, rightOp);
+            leftOp = createBinary(context.op.getText(), leftOp, rightOp);
         }
         return leftOp;
     }
@@ -149,18 +172,26 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
 
         for (int i = 1; i < context.factor().size(); i++) {
             ExpressionNode rightOp = parseFactor(context.factor(i));
-            leftOp = createBinary(context.op.getText().charAt(0), leftOp, rightOp);
+            leftOp = createBinary(context.op.getText(), leftOp, rightOp);
         }
         return leftOp;
     }
 
-    private ExpressionNode createBinary (char op, ExpressionNode leftOp, ExpressionNode rightOp){
+    private ExpressionNode createBinary (String op, ExpressionNode leftOp, ExpressionNode rightOp){
         switch (op){
-            case '+': return AddNodeGen.create(leftOp, rightOp);
-            case '-': return SubtractNodeGen.create(leftOp, rightOp);
-            case '*': return MultiplyNodeGen.create(leftOp, rightOp);
-            case '/': return DivideNodeGen.create(leftOp, rightOp);
-            case '%': return ModuloNodeGen.create(leftOp, rightOp);
+            case "+": return AddNodeGen.create(leftOp, rightOp);
+            case "-": return SubtractNodeGen.create(leftOp, rightOp);
+            case "*": return MultiplyNodeGen.create(leftOp, rightOp);
+            case "/": return DivideNodeGen.create(leftOp, rightOp);
+            case "%": return ModuloNodeGen.create(leftOp, rightOp);
+            case "==": return EqualsNodeGen.create(leftOp, rightOp);
+            case "!=": return NotNodeGen.create(EqualsNodeGen.create(leftOp, rightOp));
+            case "<": return LessThanNodeGen.create(leftOp, rightOp);
+            case "<=": return LessThanOrEqualNodeGen.create(leftOp, rightOp);
+            case ">": return NotNodeGen.create(LessThanOrEqualNodeGen.create(leftOp, rightOp));
+            case ">=": return NotNodeGen.create(LessThanNodeGen.create(leftOp, rightOp));
+            case "&&": return AndLogicNodeGen.create(leftOp, rightOp);
+            case "||": return OrNodeGen.create(leftOp, rightOp);
         }
         throw new UnsupportedOperationException("Operator " + op + " not supported");
     }

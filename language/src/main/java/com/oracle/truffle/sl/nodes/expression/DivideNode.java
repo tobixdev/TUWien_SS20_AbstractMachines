@@ -7,8 +7,7 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 @NodeInfo(shortName = "/")
 public abstract class DivideNode extends BinaryNode {
     @Specialization
-    @CompilerDirectives.TruffleBoundary
-    protected long multiply(long left, long right) {
+    protected long divide(long left, long right) {
         return left / right;
     }
 }

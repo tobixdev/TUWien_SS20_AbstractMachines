@@ -91,7 +91,9 @@ suite: NEWLINE INDENT (stmnt NEWLINE)+ DEDENT;
 stmnt: 'let' IDENTIFIER '=' expression |
        'ret' expression;
 
-expression: arithmetic;
+expression: logical_term;
+logical_term: logical_factor (op=('&&' | '||') logical_factor)*;
+logical_factor: arithmetic (op=('==' | '!=' | '>' | '<' | '>=' | '<=') arithmetic)*;
 arithmetic: term (op=('+' | '-') term)*;
 term: factor (op=('*' | '/' | '%') factor)*;
 factor: NUMERIC_LITERAL | IDENTIFIER | '(' expression ')';

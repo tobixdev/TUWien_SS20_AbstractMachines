@@ -76,6 +76,30 @@ public class RingelnatterBaseListener implements RingelnatterListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterLogical_term(RingelnatterParser.Logical_termContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLogical_term(RingelnatterParser.Logical_termContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLogical_factor(RingelnatterParser.Logical_factorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLogical_factor(RingelnatterParser.Logical_factorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterArithmetic(RingelnatterParser.ArithmeticContext ctx) { }
 	/**
 	 * {@inheritDoc}

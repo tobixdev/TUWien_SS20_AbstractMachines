@@ -58,6 +58,26 @@ public interface RingelnatterListener extends ParseTreeListener {
 	 */
 	void exitExpression(RingelnatterParser.ExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link RingelnatterParser#logical_term}.
+	 * @param ctx the parse tree
+	 */
+	void enterLogical_term(RingelnatterParser.Logical_termContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RingelnatterParser#logical_term}.
+	 * @param ctx the parse tree
+	 */
+	void exitLogical_term(RingelnatterParser.Logical_termContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RingelnatterParser#logical_factor}.
+	 * @param ctx the parse tree
+	 */
+	void enterLogical_factor(RingelnatterParser.Logical_factorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RingelnatterParser#logical_factor}.
+	 * @param ctx the parse tree
+	 */
+	void exitLogical_factor(RingelnatterParser.Logical_factorContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link RingelnatterParser#arithmetic}.
 	 * @param ctx the parse tree
 	 */
