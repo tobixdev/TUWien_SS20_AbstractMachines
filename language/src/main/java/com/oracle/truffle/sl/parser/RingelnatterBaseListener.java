@@ -131,6 +131,18 @@ public class RingelnatterBaseListener implements RingelnatterListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFactor(RingelnatterParser.FactorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTypename(RingelnatterParser.TypenameContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTypename(RingelnatterParser.TypenameContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

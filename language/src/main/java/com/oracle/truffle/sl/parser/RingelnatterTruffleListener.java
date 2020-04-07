@@ -179,7 +179,7 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
 
     private ExpressionNode parseFactor(RingelnatterParser.FactorContext context) {
         if (context.factor() != null){
-            return NotNodeGen.create(parseFactor(context.factor()));
+            return parseUnaryOperator(context);
         } else if (context.NUMERIC_LITERAL() != null) {
             return new LongValueNode(Long.parseLong(context.NUMERIC_LITERAL().getText()));
         } else if (context.IDENTIFIER() != null) {
@@ -191,6 +191,16 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         }
 
         throw new UnsupportedOperationException("Factor could not be parsed");
+    }
+
+    private ExpressionNode parseUnaryOperator(RingelnatterParser.FactorContext context) {
+        String op = context.op.getText();
+        ExpressionNode inner = parseFactor(context.factor());
+        switch (op){
+            case "!": return NotNodeGen.create(inner);
+            case "is": return IsNodeGen.create(context.typename().getText(), inner);
+        }
+        throw new UnsupportedOperationException("Operator " + op + " not supported");
     }
 
     private ExpressionNode createBinary (String op, ExpressionNode leftOp, ExpressionNode rightOp){

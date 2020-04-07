@@ -107,4 +107,14 @@ public interface RingelnatterListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFactor(RingelnatterParser.FactorContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RingelnatterParser#typename}.
+	 * @param ctx the parse tree
+	 */
+	void enterTypename(RingelnatterParser.TypenameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RingelnatterParser#typename}.
+	 * @param ctx the parse tree
+	 */
+	void exitTypename(RingelnatterParser.TypenameContext ctx);
 }

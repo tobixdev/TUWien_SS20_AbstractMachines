@@ -19,26 +19,28 @@ public class RingelnatterParser extends Parser {
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, LINE_COMMENT=23, IDENTIFIER=24, 
-		NUMERIC_LITERAL=25, WS=26, NEWLINE=27, INDENT=28, DEDENT=29;
+		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
+		T__24=25, LINE_COMMENT=26, IDENTIFIER=27, NUMERIC_LITERAL=28, WS=29, NEWLINE=30, 
+		INDENT=31, DEDENT=32;
 	public static final int
 		RULE_ringelnatter = 0, RULE_function = 1, RULE_suite = 2, RULE_stmnt = 3, 
 		RULE_expression = 4, RULE_logical_term = 5, RULE_logical_factor = 6, RULE_arithmetic = 7, 
-		RULE_term = 8, RULE_factor = 9;
+		RULE_term = 8, RULE_factor = 9, RULE_typename = 10;
 	public static final String[] ruleNames = {
 		"ringelnatter", "function", "suite", "stmnt", "expression", "logical_term", 
-		"logical_factor", "arithmetic", "term", "factor"
+		"logical_factor", "arithmetic", "term", "factor", "typename"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
 		null, "'fn'", "'('", "','", "'):'", "'let'", "'='", "'ret'", "'&&'", "'||'", 
 		"'=='", "'!='", "'>'", "'<'", "'>='", "'<='", "'+'", "'-'", "'*'", "'/'", 
-		"'%'", "'!'", "')'"
+		"'%'", "'!'", "'is'", "')'", "'number'", "'list'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, "LINE_COMMENT", 
-		"IDENTIFIER", "NUMERIC_LITERAL", "WS", "NEWLINE", "INDENT", "DEDENT"
+		null, null, null, null, null, null, null, null, null, null, null, null, 
+		null, null, "LINE_COMMENT", "IDENTIFIER", "NUMERIC_LITERAL", "WS", "NEWLINE", 
+		"INDENT", "DEDENT"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -125,23 +127,23 @@ public class RingelnatterParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(24);
+			setState(26);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==T__0 || _la==NEWLINE) {
 				{
-				setState(22);
+				setState(24);
 				_errHandler.sync(this);
 				switch (_input.LA(1)) {
 				case T__0:
 					{
-					setState(20);
+					setState(22);
 					function();
 					}
 					break;
 				case NEWLINE:
 					{
-					setState(21);
+					setState(23);
 					match(NEWLINE);
 					}
 					break;
@@ -149,11 +151,11 @@ public class RingelnatterParser extends Parser {
 					throw new NoViableAltException(this);
 				}
 				}
-				setState(26);
+				setState(28);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(27);
+			setState(29);
 			match(EOF);
 			}
 		}
@@ -197,41 +199,41 @@ public class RingelnatterParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(29);
-			match(T__0);
-			setState(30);
-			match(IDENTIFIER);
 			setState(31);
-			match(T__1);
+			match(T__0);
+			setState(32);
+			match(IDENTIFIER);
 			setState(33);
+			match(T__1);
+			setState(35);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==IDENTIFIER) {
 				{
-				setState(32);
+				setState(34);
 				match(IDENTIFIER);
 				}
 			}
 
-			setState(39);
+			setState(41);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==T__2) {
 				{
 				{
-				setState(35);
+				setState(37);
 				match(T__2);
-				setState(36);
+				setState(38);
 				match(IDENTIFIER);
 				}
 				}
-				setState(41);
+				setState(43);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(42);
+			setState(44);
 			match(T__3);
-			setState(43);
+			setState(45);
 			suite();
 			}
 		}
@@ -280,27 +282,27 @@ public class RingelnatterParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(45);
+			setState(47);
 			match(NEWLINE);
-			setState(46);
+			setState(48);
 			match(INDENT);
-			setState(50); 
+			setState(52); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(47);
+				setState(49);
 				stmnt();
-				setState(48);
+				setState(50);
 				match(NEWLINE);
 				}
 				}
-				setState(52); 
+				setState(54); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==T__4 || _la==T__6 );
-			setState(54);
+			setState(56);
 			match(DEDENT);
 			}
 		}
@@ -338,28 +340,28 @@ public class RingelnatterParser extends Parser {
 		StmntContext _localctx = new StmntContext(_ctx, getState());
 		enterRule(_localctx, 6, RULE_stmnt);
 		try {
-			setState(62);
+			setState(64);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__4:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(56);
-				match(T__4);
-				setState(57);
-				match(IDENTIFIER);
 				setState(58);
-				match(T__5);
+				match(T__4);
 				setState(59);
+				match(IDENTIFIER);
+				setState(60);
+				match(T__5);
+				setState(61);
 				expression();
 				}
 				break;
 			case T__6:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(60);
+				setState(62);
 				match(T__6);
-				setState(61);
+				setState(63);
 				expression();
 				}
 				break;
@@ -402,7 +404,7 @@ public class RingelnatterParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(64);
+			setState(66);
 			logical_term();
 			}
 		}
@@ -446,15 +448,15 @@ public class RingelnatterParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(66);
+			setState(68);
 			logical_factor();
-			setState(71);
+			setState(73);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==T__7 || _la==T__8) {
 				{
 				{
-				setState(67);
+				setState(69);
 				((Logical_termContext)_localctx).op = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !(_la==T__7 || _la==T__8) ) {
@@ -465,11 +467,11 @@ public class RingelnatterParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(68);
+				setState(70);
 				logical_factor();
 				}
 				}
-				setState(73);
+				setState(75);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -515,15 +517,15 @@ public class RingelnatterParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(74);
+			setState(76);
 			arithmetic();
-			setState(79);
+			setState(81);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__9) | (1L << T__10) | (1L << T__11) | (1L << T__12) | (1L << T__13) | (1L << T__14))) != 0)) {
 				{
 				{
-				setState(75);
+				setState(77);
 				((Logical_factorContext)_localctx).op = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__9) | (1L << T__10) | (1L << T__11) | (1L << T__12) | (1L << T__13) | (1L << T__14))) != 0)) ) {
@@ -534,11 +536,11 @@ public class RingelnatterParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(76);
+				setState(78);
 				arithmetic();
 				}
 				}
-				setState(81);
+				setState(83);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -584,15 +586,15 @@ public class RingelnatterParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(82);
+			setState(84);
 			term();
-			setState(87);
+			setState(89);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==T__15 || _la==T__16) {
 				{
 				{
-				setState(83);
+				setState(85);
 				((ArithmeticContext)_localctx).op = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !(_la==T__15 || _la==T__16) ) {
@@ -603,11 +605,11 @@ public class RingelnatterParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(84);
+				setState(86);
 				term();
 				}
 				}
-				setState(89);
+				setState(91);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -653,15 +655,15 @@ public class RingelnatterParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(90);
-			factor();
-			setState(95);
+			setState(92);
+			factor(0);
+			setState(97);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__17) | (1L << T__18) | (1L << T__19))) != 0)) {
 				{
 				{
-				setState(91);
+				setState(93);
 				((TermContext)_localctx).op = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__17) | (1L << T__18) | (1L << T__19))) != 0)) ) {
@@ -672,11 +674,11 @@ public class RingelnatterParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(92);
-				factor();
+				setState(94);
+				factor(0);
 				}
 				}
-				setState(97);
+				setState(99);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -694,6 +696,7 @@ public class RingelnatterParser extends Parser {
 	}
 
 	public static class FactorContext extends ParserRuleContext {
+		public Token op;
 		public FactorContext factor() {
 			return getRuleContext(FactorContext.class,0);
 		}
@@ -701,6 +704,9 @@ public class RingelnatterParser extends Parser {
 		public TerminalNode IDENTIFIER() { return getToken(RingelnatterParser.IDENTIFIER, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
+		}
+		public TypenameContext typename() {
+			return getRuleContext(TypenameContext.class,0);
 		}
 		public FactorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -717,48 +723,126 @@ public class RingelnatterParser extends Parser {
 	}
 
 	public final FactorContext factor() throws RecognitionException {
-		FactorContext _localctx = new FactorContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_factor);
+		return factor(0);
+	}
+
+	private FactorContext factor(int _p) throws RecognitionException {
+		ParserRuleContext _parentctx = _ctx;
+		int _parentState = getState();
+		FactorContext _localctx = new FactorContext(_ctx, _parentState);
+		FactorContext _prevctx = _localctx;
+		int _startState = 18;
+		enterRecursionRule(_localctx, 18, RULE_factor, _p);
 		try {
-			setState(106);
+			int _alt;
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(109);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__20:
-				enterOuterAlt(_localctx, 1);
 				{
-				setState(98);
-				match(T__20);
-				setState(99);
-				factor();
+				setState(101);
+				((FactorContext)_localctx).op = match(T__20);
+				setState(102);
+				factor(5);
 				}
 				break;
 			case NUMERIC_LITERAL:
-				enterOuterAlt(_localctx, 2);
 				{
-				setState(100);
+				setState(103);
 				match(NUMERIC_LITERAL);
 				}
 				break;
 			case IDENTIFIER:
-				enterOuterAlt(_localctx, 3);
 				{
-				setState(101);
+				setState(104);
 				match(IDENTIFIER);
 				}
 				break;
 			case T__1:
-				enterOuterAlt(_localctx, 4);
 				{
-				setState(102);
+				setState(105);
 				match(T__1);
-				setState(103);
+				setState(106);
 				expression();
-				setState(104);
-				match(T__21);
+				setState(107);
+				match(T__22);
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
+			}
+			_ctx.stop = _input.LT(-1);
+			setState(116);
+			_errHandler.sync(this);
+			_alt = getInterpreter().adaptivePredict(_input,11,_ctx);
+			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+				if ( _alt==1 ) {
+					if ( _parseListeners!=null ) triggerExitRuleEvent();
+					_prevctx = _localctx;
+					{
+					{
+					_localctx = new FactorContext(_parentctx, _parentState);
+					pushNewRecursionContext(_localctx, _startState, RULE_factor);
+					setState(111);
+					if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
+					setState(112);
+					((FactorContext)_localctx).op = match(T__21);
+					setState(113);
+					typename();
+					}
+					} 
+				}
+				setState(118);
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,11,_ctx);
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			unrollRecursionContexts(_parentctx);
+		}
+		return _localctx;
+	}
+
+	public static class TypenameContext extends ParserRuleContext {
+		public TypenameContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_typename; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof RingelnatterListener ) ((RingelnatterListener)listener).enterTypename(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof RingelnatterListener ) ((RingelnatterListener)listener).exitTypename(this);
+		}
+	}
+
+	public final TypenameContext typename() throws RecognitionException {
+		TypenameContext _localctx = new TypenameContext(_ctx, getState());
+		enterRule(_localctx, 20, RULE_typename);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(119);
+			_la = _input.LA(1);
+			if ( !(_la==T__23 || _la==T__24) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -772,35 +856,52 @@ public class RingelnatterParser extends Parser {
 		return _localctx;
 	}
 
+	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
+		switch (ruleIndex) {
+		case 9:
+			return factor_sempred((FactorContext)_localctx, predIndex);
+		}
+		return true;
+	}
+	private boolean factor_sempred(FactorContext _localctx, int predIndex) {
+		switch (predIndex) {
+		case 0:
+			return precpred(_ctx, 4);
+		}
+		return true;
+	}
+
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\37o\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\3"+
-		"\2\3\2\7\2\31\n\2\f\2\16\2\34\13\2\3\2\3\2\3\3\3\3\3\3\3\3\5\3$\n\3\3"+
-		"\3\3\3\7\3(\n\3\f\3\16\3+\13\3\3\3\3\3\3\3\3\4\3\4\3\4\3\4\3\4\6\4\65"+
-		"\n\4\r\4\16\4\66\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\5\5\5A\n\5\3\6\3\6\3\7"+
-		"\3\7\3\7\7\7H\n\7\f\7\16\7K\13\7\3\b\3\b\3\b\7\bP\n\b\f\b\16\bS\13\b\3"+
-		"\t\3\t\3\t\7\tX\n\t\f\t\16\t[\13\t\3\n\3\n\3\n\7\n`\n\n\f\n\16\nc\13\n"+
-		"\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\5\13m\n\13\3\13\2\2\f\2\4\6\b"+
-		"\n\f\16\20\22\24\2\6\3\2\n\13\3\2\f\21\3\2\22\23\3\2\24\26\2q\2\32\3\2"+
-		"\2\2\4\37\3\2\2\2\6/\3\2\2\2\b@\3\2\2\2\nB\3\2\2\2\fD\3\2\2\2\16L\3\2"+
-		"\2\2\20T\3\2\2\2\22\\\3\2\2\2\24l\3\2\2\2\26\31\5\4\3\2\27\31\7\35\2\2"+
-		"\30\26\3\2\2\2\30\27\3\2\2\2\31\34\3\2\2\2\32\30\3\2\2\2\32\33\3\2\2\2"+
-		"\33\35\3\2\2\2\34\32\3\2\2\2\35\36\7\2\2\3\36\3\3\2\2\2\37 \7\3\2\2 !"+
-		"\7\32\2\2!#\7\4\2\2\"$\7\32\2\2#\"\3\2\2\2#$\3\2\2\2$)\3\2\2\2%&\7\5\2"+
-		"\2&(\7\32\2\2\'%\3\2\2\2(+\3\2\2\2)\'\3\2\2\2)*\3\2\2\2*,\3\2\2\2+)\3"+
-		"\2\2\2,-\7\6\2\2-.\5\6\4\2.\5\3\2\2\2/\60\7\35\2\2\60\64\7\36\2\2\61\62"+
-		"\5\b\5\2\62\63\7\35\2\2\63\65\3\2\2\2\64\61\3\2\2\2\65\66\3\2\2\2\66\64"+
-		"\3\2\2\2\66\67\3\2\2\2\678\3\2\2\289\7\37\2\29\7\3\2\2\2:;\7\7\2\2;<\7"+
-		"\32\2\2<=\7\b\2\2=A\5\n\6\2>?\7\t\2\2?A\5\n\6\2@:\3\2\2\2@>\3\2\2\2A\t"+
-		"\3\2\2\2BC\5\f\7\2C\13\3\2\2\2DI\5\16\b\2EF\t\2\2\2FH\5\16\b\2GE\3\2\2"+
-		"\2HK\3\2\2\2IG\3\2\2\2IJ\3\2\2\2J\r\3\2\2\2KI\3\2\2\2LQ\5\20\t\2MN\t\3"+
-		"\2\2NP\5\20\t\2OM\3\2\2\2PS\3\2\2\2QO\3\2\2\2QR\3\2\2\2R\17\3\2\2\2SQ"+
-		"\3\2\2\2TY\5\22\n\2UV\t\4\2\2VX\5\22\n\2WU\3\2\2\2X[\3\2\2\2YW\3\2\2\2"+
-		"YZ\3\2\2\2Z\21\3\2\2\2[Y\3\2\2\2\\a\5\24\13\2]^\t\5\2\2^`\5\24\13\2_]"+
-		"\3\2\2\2`c\3\2\2\2a_\3\2\2\2ab\3\2\2\2b\23\3\2\2\2ca\3\2\2\2de\7\27\2"+
-		"\2em\5\24\13\2fm\7\33\2\2gm\7\32\2\2hi\7\4\2\2ij\5\n\6\2jk\7\30\2\2km"+
-		"\3\2\2\2ld\3\2\2\2lf\3\2\2\2lg\3\2\2\2lh\3\2\2\2m\25\3\2\2\2\r\30\32#"+
-		")\66@IQYal";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\"|\4\2\t\2\4\3\t"+
+		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4"+
+		"\f\t\f\3\2\3\2\7\2\33\n\2\f\2\16\2\36\13\2\3\2\3\2\3\3\3\3\3\3\3\3\5\3"+
+		"&\n\3\3\3\3\3\7\3*\n\3\f\3\16\3-\13\3\3\3\3\3\3\3\3\4\3\4\3\4\3\4\3\4"+
+		"\6\4\67\n\4\r\4\16\48\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\5\5\5C\n\5\3\6\3\6"+
+		"\3\7\3\7\3\7\7\7J\n\7\f\7\16\7M\13\7\3\b\3\b\3\b\7\bR\n\b\f\b\16\bU\13"+
+		"\b\3\t\3\t\3\t\7\tZ\n\t\f\t\16\t]\13\t\3\n\3\n\3\n\7\nb\n\n\f\n\16\ne"+
+		"\13\n\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\5\13p\n\13\3\13\3\13"+
+		"\3\13\7\13u\n\13\f\13\16\13x\13\13\3\f\3\f\3\f\2\3\24\r\2\4\6\b\n\f\16"+
+		"\20\22\24\26\2\7\3\2\n\13\3\2\f\21\3\2\22\23\3\2\24\26\3\2\32\33\2~\2"+
+		"\34\3\2\2\2\4!\3\2\2\2\6\61\3\2\2\2\bB\3\2\2\2\nD\3\2\2\2\fF\3\2\2\2\16"+
+		"N\3\2\2\2\20V\3\2\2\2\22^\3\2\2\2\24o\3\2\2\2\26y\3\2\2\2\30\33\5\4\3"+
+		"\2\31\33\7 \2\2\32\30\3\2\2\2\32\31\3\2\2\2\33\36\3\2\2\2\34\32\3\2\2"+
+		"\2\34\35\3\2\2\2\35\37\3\2\2\2\36\34\3\2\2\2\37 \7\2\2\3 \3\3\2\2\2!\""+
+		"\7\3\2\2\"#\7\35\2\2#%\7\4\2\2$&\7\35\2\2%$\3\2\2\2%&\3\2\2\2&+\3\2\2"+
+		"\2\'(\7\5\2\2(*\7\35\2\2)\'\3\2\2\2*-\3\2\2\2+)\3\2\2\2+,\3\2\2\2,.\3"+
+		"\2\2\2-+\3\2\2\2./\7\6\2\2/\60\5\6\4\2\60\5\3\2\2\2\61\62\7 \2\2\62\66"+
+		"\7!\2\2\63\64\5\b\5\2\64\65\7 \2\2\65\67\3\2\2\2\66\63\3\2\2\2\678\3\2"+
+		"\2\28\66\3\2\2\289\3\2\2\29:\3\2\2\2:;\7\"\2\2;\7\3\2\2\2<=\7\7\2\2=>"+
+		"\7\35\2\2>?\7\b\2\2?C\5\n\6\2@A\7\t\2\2AC\5\n\6\2B<\3\2\2\2B@\3\2\2\2"+
+		"C\t\3\2\2\2DE\5\f\7\2E\13\3\2\2\2FK\5\16\b\2GH\t\2\2\2HJ\5\16\b\2IG\3"+
+		"\2\2\2JM\3\2\2\2KI\3\2\2\2KL\3\2\2\2L\r\3\2\2\2MK\3\2\2\2NS\5\20\t\2O"+
+		"P\t\3\2\2PR\5\20\t\2QO\3\2\2\2RU\3\2\2\2SQ\3\2\2\2ST\3\2\2\2T\17\3\2\2"+
+		"\2US\3\2\2\2V[\5\22\n\2WX\t\4\2\2XZ\5\22\n\2YW\3\2\2\2Z]\3\2\2\2[Y\3\2"+
+		"\2\2[\\\3\2\2\2\\\21\3\2\2\2][\3\2\2\2^c\5\24\13\2_`\t\5\2\2`b\5\24\13"+
+		"\2a_\3\2\2\2be\3\2\2\2ca\3\2\2\2cd\3\2\2\2d\23\3\2\2\2ec\3\2\2\2fg\b\13"+
+		"\1\2gh\7\27\2\2hp\5\24\13\7ip\7\36\2\2jp\7\35\2\2kl\7\4\2\2lm\5\n\6\2"+
+		"mn\7\31\2\2np\3\2\2\2of\3\2\2\2oi\3\2\2\2oj\3\2\2\2ok\3\2\2\2pv\3\2\2"+
+		"\2qr\f\6\2\2rs\7\30\2\2su\5\26\f\2tq\3\2\2\2ux\3\2\2\2vt\3\2\2\2vw\3\2"+
+		"\2\2w\25\3\2\2\2xv\3\2\2\2yz\t\6\2\2z\27\3\2\2\2\16\32\34%+8BKS[cov";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

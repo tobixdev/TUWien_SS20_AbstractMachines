@@ -99,6 +99,12 @@ public class SimpleTests extends RingelnatterProgramTest {
     }
 
     @Test
+    public void simpleIs() {
+        assertThat (executeExpression("3 is number"), is("1"));
+        assertThat (executeExpression("3 is list"), is("0"));
+    }
+
+    @Test
     public void simpleExpression() {
         assertThat (executeExpression("(10 - 3 * 2) + 4"), is("8"));
     }
