@@ -1,4 +1,4 @@
-package com.oracle.truffle.sl;
+package com.oracle.truffle.sl.parser;
 
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.Truffle;
@@ -6,6 +6,9 @@ import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.source.Source;
+import com.oracle.truffle.sl.FunctionBodyNode;
+import com.oracle.truffle.sl.RingelnatterLanguage;
+import com.oracle.truffle.sl.RingelnatterRootNode;
 import com.oracle.truffle.sl.nodes.*;
 import com.oracle.truffle.sl.nodes.expression.*;
 import com.oracle.truffle.sl.parser.RingelnatterBaseListener;
@@ -157,6 +160,7 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
             case '-': return SubtractNodeGen.create(leftOp, rightOp);
             case '*': return MultiplyNodeGen.create(leftOp, rightOp);
             case '/': return DivideNodeGen.create(leftOp, rightOp);
+            case '%': return ModuloNodeGen.create(leftOp, rightOp);
         }
         throw new UnsupportedOperationException("Operator " + op + " not supported");
     }

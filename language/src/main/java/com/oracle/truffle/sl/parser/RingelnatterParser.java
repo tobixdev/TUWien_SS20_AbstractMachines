@@ -18,8 +18,8 @@ public class RingelnatterParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
-		T__9=10, T__10=11, T__11=12, LINE_COMMENT=13, IDENTIFIER=14, NUMERIC_LITERAL=15, 
-		WS=16, NEWLINE=17, INDENT=18, DEDENT=19;
+		T__9=10, T__10=11, T__11=12, T__12=13, LINE_COMMENT=14, IDENTIFIER=15, 
+		NUMERIC_LITERAL=16, WS=17, NEWLINE=18, INDENT=19, DEDENT=20;
 	public static final int
 		RULE_ringelnatter = 0, RULE_function = 1, RULE_suite = 2, RULE_stmnt = 3, 
 		RULE_expression = 4, RULE_arithmetic = 5, RULE_term = 6, RULE_factor = 7;
@@ -29,12 +29,12 @@ public class RingelnatterParser extends Parser {
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "'fn '", "'('", "','", "'):'", "'let'", "'='", "'ret'", "'+'", "'-'", 
-		"'*'", "'/'", "')'"
+		null, "'fn'", "'('", "','", "'):'", "'let'", "'='", "'ret'", "'+'", "'-'", 
+		"'*'", "'/'", "'%'", "')'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, "LINE_COMMENT", "IDENTIFIER", "NUMERIC_LITERAL", "WS", "NEWLINE", 
+		null, null, "LINE_COMMENT", "IDENTIFIER", "NUMERIC_LITERAL", "WS", "NEWLINE", 
 		"INDENT", "DEDENT"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
@@ -517,13 +517,13 @@ public class RingelnatterParser extends Parser {
 			setState(75);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__9 || _la==T__10) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__9) | (1L << T__10) | (1L << T__11))) != 0)) {
 				{
 				{
 				setState(71);
 				((TermContext)_localctx).op = _input.LT(1);
 				_la = _input.LA(1);
-				if ( !(_la==T__9 || _la==T__10) ) {
+				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__9) | (1L << T__10) | (1L << T__11))) != 0)) ) {
 					((TermContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 				}
 				else {
@@ -601,7 +601,7 @@ public class RingelnatterParser extends Parser {
 				setState(81);
 				expression();
 				setState(82);
-				match(T__11);
+				match(T__12);
 				}
 				break;
 			default:
@@ -620,27 +620,27 @@ public class RingelnatterParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\25Y\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\26Y\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\3\2\3\2\7\2\25\n\2"+
 		"\f\2\16\2\30\13\2\3\2\3\2\3\3\3\3\3\3\3\3\5\3 \n\3\3\3\3\3\7\3$\n\3\f"+
 		"\3\16\3\'\13\3\3\3\3\3\3\3\3\4\3\4\3\4\3\4\3\4\6\4\61\n\4\r\4\16\4\62"+
 		"\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\5\5\5=\n\5\3\6\3\6\3\7\3\7\3\7\7\7D\n\7"+
 		"\f\7\16\7G\13\7\3\b\3\b\3\b\7\bL\n\b\f\b\16\bO\13\b\3\t\3\t\3\t\3\t\3"+
-		"\t\3\t\5\tW\n\t\3\t\2\2\n\2\4\6\b\n\f\16\20\2\4\3\2\n\13\3\2\f\r\2Z\2"+
+		"\t\3\t\5\tW\n\t\3\t\2\2\n\2\4\6\b\n\f\16\20\2\4\3\2\n\13\3\2\f\16\2Z\2"+
 		"\26\3\2\2\2\4\33\3\2\2\2\6+\3\2\2\2\b<\3\2\2\2\n>\3\2\2\2\f@\3\2\2\2\16"+
-		"H\3\2\2\2\20V\3\2\2\2\22\25\5\4\3\2\23\25\7\23\2\2\24\22\3\2\2\2\24\23"+
+		"H\3\2\2\2\20V\3\2\2\2\22\25\5\4\3\2\23\25\7\24\2\2\24\22\3\2\2\2\24\23"+
 		"\3\2\2\2\25\30\3\2\2\2\26\24\3\2\2\2\26\27\3\2\2\2\27\31\3\2\2\2\30\26"+
-		"\3\2\2\2\31\32\7\2\2\3\32\3\3\2\2\2\33\34\7\3\2\2\34\35\7\20\2\2\35\37"+
-		"\7\4\2\2\36 \7\20\2\2\37\36\3\2\2\2\37 \3\2\2\2 %\3\2\2\2!\"\7\5\2\2\""+
-		"$\7\20\2\2#!\3\2\2\2$\'\3\2\2\2%#\3\2\2\2%&\3\2\2\2&(\3\2\2\2\'%\3\2\2"+
-		"\2()\7\6\2\2)*\5\6\4\2*\5\3\2\2\2+,\7\23\2\2,\60\7\24\2\2-.\5\b\5\2./"+
-		"\7\23\2\2/\61\3\2\2\2\60-\3\2\2\2\61\62\3\2\2\2\62\60\3\2\2\2\62\63\3"+
-		"\2\2\2\63\64\3\2\2\2\64\65\7\25\2\2\65\7\3\2\2\2\66\67\7\7\2\2\678\7\20"+
+		"\3\2\2\2\31\32\7\2\2\3\32\3\3\2\2\2\33\34\7\3\2\2\34\35\7\21\2\2\35\37"+
+		"\7\4\2\2\36 \7\21\2\2\37\36\3\2\2\2\37 \3\2\2\2 %\3\2\2\2!\"\7\5\2\2\""+
+		"$\7\21\2\2#!\3\2\2\2$\'\3\2\2\2%#\3\2\2\2%&\3\2\2\2&(\3\2\2\2\'%\3\2\2"+
+		"\2()\7\6\2\2)*\5\6\4\2*\5\3\2\2\2+,\7\24\2\2,\60\7\25\2\2-.\5\b\5\2./"+
+		"\7\24\2\2/\61\3\2\2\2\60-\3\2\2\2\61\62\3\2\2\2\62\60\3\2\2\2\62\63\3"+
+		"\2\2\2\63\64\3\2\2\2\64\65\7\26\2\2\65\7\3\2\2\2\66\67\7\7\2\2\678\7\21"+
 		"\2\289\7\b\2\29=\5\n\6\2:;\7\t\2\2;=\5\n\6\2<\66\3\2\2\2<:\3\2\2\2=\t"+
 		"\3\2\2\2>?\5\f\7\2?\13\3\2\2\2@E\5\16\b\2AB\t\2\2\2BD\5\16\b\2CA\3\2\2"+
 		"\2DG\3\2\2\2EC\3\2\2\2EF\3\2\2\2F\r\3\2\2\2GE\3\2\2\2HM\5\20\t\2IJ\t\3"+
 		"\2\2JL\5\20\t\2KI\3\2\2\2LO\3\2\2\2MK\3\2\2\2MN\3\2\2\2N\17\3\2\2\2OM"+
-		"\3\2\2\2PW\7\21\2\2QW\7\20\2\2RS\7\4\2\2ST\5\n\6\2TU\7\16\2\2UW\3\2\2"+
+		"\3\2\2\2PW\7\22\2\2QW\7\21\2\2RS\7\4\2\2ST\5\n\6\2TU\7\17\2\2UW\3\2\2"+
 		"\2VP\3\2\2\2VQ\3\2\2\2VR\3\2\2\2W\21\3\2\2\2\13\24\26\37%\62<EMV";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());

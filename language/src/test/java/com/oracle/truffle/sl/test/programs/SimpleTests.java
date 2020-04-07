@@ -35,6 +35,13 @@ public class SimpleTests extends RingelnatterProgramTest {
     }
 
     @Test
+    public void simpleMod() {
+        String result = executeProgram("fn main():\n" +
+                "\tret 10 % 3\n");
+        assertThat (result, is("1"));
+    }
+
+    @Test
     public void simpleDivision() {
         String result = executeProgram("fn main():\n" +
                 "\tret 10 / 3\n");

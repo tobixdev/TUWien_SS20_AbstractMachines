@@ -93,7 +93,7 @@ stmnt: 'let' IDENTIFIER '=' expression |
 
 expression: arithmetic;
 arithmetic: term (op=('+' | '-') term)*;
-term: factor (op=('*' | '/') factor)*;
+term: factor (op=('*' | '/' | '%') factor)*;
 factor: NUMERIC_LITERAL | IDENTIFIER | '(' expression ')';
 
 /*
