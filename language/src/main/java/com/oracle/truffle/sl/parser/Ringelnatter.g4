@@ -96,7 +96,7 @@ logical_term: logical_factor (op=('&&' | '||') logical_factor)*;
 logical_factor: arithmetic (op=('==' | '!=' | '>' | '<' | '>=' | '<=') arithmetic)*;
 arithmetic: term (op=('+' | '-') term)*;
 term: factor (op=('*' | '/' | '%') factor)*;
-factor: NUMERIC_LITERAL | IDENTIFIER | '(' expression ')';
+factor: '!' factor | NUMERIC_LITERAL | IDENTIFIER | '(' expression ')';
 
 /*
 * Lexer Rules. Thanks to https://github.com/antlr/grammars-v4/blob/master/python/python3/Python3.g4 for indent handling.

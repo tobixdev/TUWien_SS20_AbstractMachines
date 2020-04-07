@@ -177,6 +177,22 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         return leftOp;
     }
 
+    private ExpressionNode parseFactor(RingelnatterParser.FactorContext context) {
+        if (context.factor() != null){
+            return NotNodeGen.create(parseFactor(context.factor()));
+        } else if (context.NUMERIC_LITERAL() != null) {
+            return new LongValueNode(Long.parseLong(context.NUMERIC_LITERAL().getText()));
+        } else if (context.IDENTIFIER() != null) {
+            verifyExistenceOfLocal(lexicalScope, context.IDENTIFIER());
+            FrameSlot slot = frameDescriptor.findFrameSlot(context.IDENTIFIER().getText());
+            return ReadLocalVariableNodeGen.create(slot);
+        } else if (context.expression() != null) {
+            return parseExpression(context.expression());
+        }
+
+        throw new UnsupportedOperationException("Factor could not be parsed");
+    }
+
     private ExpressionNode createBinary (String op, ExpressionNode leftOp, ExpressionNode rightOp){
         switch (op){
             case "+": return AddNodeGen.create(leftOp, rightOp);
@@ -194,20 +210,6 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
             case "||": return OrNodeGen.create(leftOp, rightOp);
         }
         throw new UnsupportedOperationException("Operator " + op + " not supported");
-    }
-
-    private ExpressionNode parseFactor(RingelnatterParser.FactorContext context) {
-        if (context.NUMERIC_LITERAL() != null) {
-            return new LongValueNode(Long.parseLong(context.NUMERIC_LITERAL().getText()));
-        } else if (context.IDENTIFIER() != null) {
-            verifyExistenceOfLocal(lexicalScope, context.IDENTIFIER());
-            FrameSlot slot = frameDescriptor.findFrameSlot(context.IDENTIFIER().getText());
-            return ReadLocalVariableNodeGen.create(slot);
-        } else if (context.expression() != null) {
-            return parseExpression(context.expression());
-        }
-
-        throw new UnsupportedOperationException("Factor could not be parsed");
     }
 
     private void verifyExistenceOfLocal(LexicalScope scope, TerminalNode node) {

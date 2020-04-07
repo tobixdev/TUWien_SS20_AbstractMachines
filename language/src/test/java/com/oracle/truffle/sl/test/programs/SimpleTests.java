@@ -77,6 +77,12 @@ public class SimpleTests extends RingelnatterProgramTest {
     }
 
     @Test
+    public void simpleNot() {
+        assertThat (executeExpression("!3"), is("0"));
+        assertThat (executeExpression("!(10 - 10)"), is("1"));
+    }
+
+    @Test
     public void simpleAnd() {
         assertThat (executeExpression("0 && 0"), is("0"));
         assertThat (executeExpression("0 && 1"), is("0"));
