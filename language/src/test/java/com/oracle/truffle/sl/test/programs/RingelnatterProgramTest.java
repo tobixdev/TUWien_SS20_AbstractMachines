@@ -11,6 +11,6 @@ public class RingelnatterProgramTest {
     }
 
     protected String executeExpression(String s) {
-        return executeProgram("fn main():\n" + "\tret " + s + "\n");
+        return executeProgram("fn main():\n" + "\tret " + s + "\n;");
     }
 }

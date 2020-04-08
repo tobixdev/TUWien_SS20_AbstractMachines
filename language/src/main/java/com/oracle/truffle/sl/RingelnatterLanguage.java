@@ -9,6 +9,7 @@ import com.oracle.truffle.sl.parser.BailoutErrorListener;
 import com.oracle.truffle.sl.parser.RingelnatterLexer;
 import com.oracle.truffle.sl.parser.RingelnatterParser;
 import com.oracle.truffle.sl.parser.RingelnatterTruffleListener;
+import com.oracle.truffle.sl.runtime.RingelnatterContext;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -33,16 +34,15 @@ public final class RingelnatterLanguage extends TruffleLanguage<RingelnatterCont
 
     @Override
     protected CallTarget parse(ParsingRequest request) throws Exception {
+        RingelnatterContext context = getCurrentContext(RingelnatterLanguage.class);
         Source source = request.getSource();
         RingelnatterLexer lexer = new RingelnatterLexer(CharStreams.fromString(source.getCharacters().toString()));
         RingelnatterParser parser = new RingelnatterParser(new CommonTokenStream(lexer));
-        RingelnatterTruffleListener listener = new RingelnatterTruffleListener(this, source, parser);
+        RingelnatterTruffleListener listener = new RingelnatterTruffleListener(this, source, context.getFunctionRegistry());
         parser.addErrorListener(new BailoutErrorListener(source));
-        parser.addParseListener(listener);
         ParseTreeWalker.DEFAULT.walk(listener, parser.ringelnatter());
 
-        Map<String, RootCallTarget> functions = listener.getCallTargets();
-        RootCallTarget main = functions.get("main");
+        RootCallTarget main = context.getFunctionRegistry().lookup("main", 0);
 
         if(main == null)
             throw new RingelnatterException("No main method found");

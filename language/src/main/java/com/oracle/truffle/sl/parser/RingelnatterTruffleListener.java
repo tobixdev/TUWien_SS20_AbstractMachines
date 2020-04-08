@@ -11,6 +11,7 @@ import com.oracle.truffle.sl.RingelnatterLanguage;
 import com.oracle.truffle.sl.RingelnatterRootNode;
 import com.oracle.truffle.sl.nodes.*;
 import com.oracle.truffle.sl.nodes.expression.*;
+import com.oracle.truffle.sl.runtime.RingelnatterFunctionRegistry;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -30,10 +31,9 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         }
     }
 
-    private Map<String, RootCallTarget> callTargets;
     private Source source;
     private final RingelnatterLanguage language;
-    private final RingelnatterParser parser;
+    private final RingelnatterFunctionRegistry functionRegistry;
 
     // state for function
     private LexicalScope lexicalScope;
@@ -44,15 +44,10 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
     private Stack<List<StatementNode>> suites;
     private SuiteNode lastExitedSuite;
 
-    public RingelnatterTruffleListener(RingelnatterLanguage language, Source source, RingelnatterParser parser) {
+    public RingelnatterTruffleListener(RingelnatterLanguage language, Source source, RingelnatterFunctionRegistry functionRegistry) {
         this.source = source;
         this.language = language;
-        this.parser = parser;
-        callTargets = new HashMap<>();
-    }
-
-    public Map<String, RootCallTarget> getCallTargets() {
-        return callTargets;
+        this.functionRegistry = functionRegistry;
     }
 
     @Override
@@ -63,15 +58,12 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         statementNodes = new LinkedList<>();
         suites = new Stack<>();
 
-        // assert no duplicate function
-
         for (int i = 1; i < identifiers.size(); i++) {
             String parameterName = identifiers.get(i).getText();
             ReadArgumentNode readArgumentNode = new ReadArgumentNode(i - 1);
             WriteLocalVariableNode writeLocalVariableNode = createLocalVariable(parameterName, readArgumentNode);
             statementNodes.add(writeLocalVariableNode);
         }
-        super.enterFunction(ctx);
     }
 
     @Override
@@ -81,7 +73,7 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         String functionName = ctx.IDENTIFIER(0).getText();
         FunctionBodyNode body = new FunctionBodyNode(new SuiteNode(statementNodes.toArray(new StatementNode[0])));
         RingelnatterRootNode rootNode = new RingelnatterRootNode(language, frameDescriptor, functionName, body);
-        callTargets.put(functionName, Truffle.getRuntime().createCallTarget(rootNode));
+        functionRegistry.register(functionName, ctx.IDENTIFIER().size() - 1, Truffle.getRuntime().createCallTarget(rootNode));
 
         lexicalScope = null;
         frameDescriptor = null;
@@ -91,14 +83,12 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
 
     @Override
     public void enterSuite(RingelnatterParser.SuiteContext ctx) {
-        System.out.println("enterSuite");
         lexicalScope = new LexicalScope(lexicalScope);
         suites.push(new LinkedList<>());
     }
 
     @Override
     public void exitSuite(RingelnatterParser.SuiteContext ctx) {
-        System.out.println("exitSuite");
         lexicalScope = lexicalScope.outer;
 
         List<StatementNode> nodes = suites.pop();
@@ -182,12 +172,19 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
             return parseUnaryOperator(context);
         } else if (context.NUMERIC_LITERAL() != null) {
             return new LongValueNode(Long.parseLong(context.NUMERIC_LITERAL().getText()));
-        } else if (context.IDENTIFIER() != null) {
+        } else if (context.IDENTIFIER() != null && context.expression() != null) {
             verifyExistenceOfLocal(lexicalScope, context.IDENTIFIER());
             FrameSlot slot = frameDescriptor.findFrameSlot(context.IDENTIFIER().getText());
             return ReadLocalVariableNodeGen.create(slot);
+        } else if (context.IDENTIFIER() != null) {
+            int argsize = context.expression().size();
+            ExpressionNode[] arguments = new ExpressionNode[argsize];
+            for (int i = 0; i < argsize; i++) {
+                arguments[i] = parseExpression(context.expression(i));
+            }
+            return new InvokeNode(context.IDENTIFIER().getText(), arguments);
         } else if (context.expression() != null) {
-            return parseExpression(context.expression());
+            return parseExpression(context.expression(0));
         }
 
         throw new UnsupportedOperationException("Factor could not be parsed");

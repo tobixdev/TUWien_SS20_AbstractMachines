@@ -55,7 +55,7 @@ public class RingelnatterLexerTest {
 
         assertThat(tokens.size(), is(2));
         assertThat(tokens.get(0).getType(), is(RingelnatterLexer.IDENTIFIER));
-        assertThat(tokens.get(0).getText(), is("hallo123_$"));
+        assertThat(tokens.get(0).getText(), is("hallo123_"));
         assertThat(tokens.get(1).getType(), is(RingelnatterLexer.EOF));
     }
 
@@ -65,19 +65,6 @@ public class RingelnatterLexerTest {
 
         assertThat(tokens.size(), is(1));
         assertThat(tokens.get(0).getType(), is(RingelnatterLexer.EOF));
-    }
-
-    @Test
-    public void lexer_correctlyProducesIndents() throws IOException {
-        List<Token> tokens = getTokensFromText("\tOne");
-
-        assertThat(tokens.size(), is(6));
-        assertThat(tokens.get(0).getType(), is(RingelnatterLexer.NEWLINE));
-        assertThat(tokens.get(1).getType(), is(RingelnatterParser.INDENT));
-        assertThat(tokens.get(2).getType(), is(RingelnatterLexer.IDENTIFIER));
-        assertThat(tokens.get(3).getType(), is(RingelnatterLexer.NEWLINE));
-        assertThat(tokens.get(4).getType(), is(RingelnatterParser.DEDENT));
-        assertThat(tokens.get(5).getType(), is(RingelnatterLexer.EOF));
     }
 
     private List<Token> getTokensFromText(String txt) throws IOException {
