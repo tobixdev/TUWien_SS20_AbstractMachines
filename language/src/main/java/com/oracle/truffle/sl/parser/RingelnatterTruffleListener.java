@@ -172,17 +172,17 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
             return parseUnaryOperator(context);
         } else if (context.NUMERIC_LITERAL() != null) {
             return new LongValueNode(Long.parseLong(context.NUMERIC_LITERAL().getText()));
-        } else if (context.IDENTIFIER() != null && context.expression() != null) {
+        } else if (context.var != null) {
             verifyExistenceOfLocal(lexicalScope, context.IDENTIFIER());
-            FrameSlot slot = frameDescriptor.findFrameSlot(context.IDENTIFIER().getText());
+            FrameSlot slot = frameDescriptor.findFrameSlot(context.var.getText());
             return ReadLocalVariableNodeGen.create(slot);
-        } else if (context.IDENTIFIER() != null) {
+        } else if (context.target != null) {
             int argsize = context.expression().size();
             ExpressionNode[] arguments = new ExpressionNode[argsize];
             for (int i = 0; i < argsize; i++) {
                 arguments[i] = parseExpression(context.expression(i));
             }
-            return new InvokeNode(context.IDENTIFIER().getText(), arguments);
+            return new InvokeNode(context.target.getText(), arguments);
         } else if (context.expression() != null) {
             return parseExpression(context.expression(0));
         }

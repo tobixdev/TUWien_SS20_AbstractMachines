@@ -115,21 +115,34 @@ public class SimpleTests extends RingelnatterProgramTest {
     }
 
     @Test
+    public void callFunction() {
+        String result = executeProgram("fn main():\n" +
+                "  ret x()\n" +
+                ";\n" +
+                "fn x():\n" +
+                "  ret 10\n" +
+                ";");
+        assertThat (result, is("10"));
+    }
+
+    @Test
     public void returnVariable() {
         String result = executeProgram("fn main():\n" +
-                "\tlet a = 10\n" +
-                "\tret a\n;");
+                "  let a = 10\n" +
+                "  ret a\n" +
+                ";");
         assertThat (result, is("10"));
     }
 
     @Test
     public void returnComplexVariables() {
         String result = executeProgram("fn main():\n" +
-                "\tlet a = 100\n" +
-                "\tlet b = a * 3\n" +
-                "\tlet c = a + b\n" +
-                "\tlet d = 50\n" +
-                "\tret c - d\n;");
+                "  let a = 100\n" +
+                "  let b = a * 3\n" +
+                "  let c = a + b\n" +
+                "  let d = 50\n" +
+                "  ret c - d\n" +
+                ";");
         assertThat (result, is("350"));
     }
 }

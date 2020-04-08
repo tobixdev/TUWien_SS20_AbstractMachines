@@ -25,9 +25,9 @@ term: factor (op=('*' | '/' | '%') factor)*;
 factor: op='!' factor |
         factor op='is' typename |
         NUMERIC_LITERAL |
-        IDENTIFIER |
+        var=IDENTIFIER |
         '(' expression ')' |
-        IDENTIFIER '(' (expression)* ')';
+        target=IDENTIFIER '(' expression? (',' expression)* ')';
 
 typename: 'number' | 'list';
 /*
