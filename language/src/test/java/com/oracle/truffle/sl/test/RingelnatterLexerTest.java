@@ -67,6 +67,36 @@ public class RingelnatterLexerTest {
         assertThat(tokens.get(0).getType(), is(RingelnatterLexer.EOF));
     }
 
+    @Test
+    public void lexer_indents() throws IOException {
+        List<Token> tokens = getTokensFromText("xyz\n"+
+                "   xyz\n");
+
+        assertThat(tokens.size(), is(7));
+        assertThat(tokens.get(0).getType(), is(RingelnatterLexer.IDENTIFIER));
+        assertThat(tokens.get(1).getType(), is(RingelnatterLexer.NEWLINE));
+        assertThat(tokens.get(2).getType(), is(RingelnatterParser.INDENT));
+        assertThat(tokens.get(3).getType(), is(RingelnatterLexer.IDENTIFIER));
+        assertThat(tokens.get(4).getType(), is(RingelnatterLexer.NEWLINE));
+        assertThat(tokens.get(5).getType(), is(RingelnatterParser.DEDENT));
+        assertThat(tokens.get(6).getType(), is(RingelnatterLexer.EOF));
+    }
+
+    @Test
+    public void lexer_indentsWithNoNewLine() throws IOException {
+        List<Token> tokens = getTokensFromText("xyz\n"+
+                "   xyz");
+
+        assertThat(tokens.size(), is(7));
+        assertThat(tokens.get(0).getType(), is(RingelnatterLexer.IDENTIFIER));
+        assertThat(tokens.get(1).getType(), is(RingelnatterLexer.NEWLINE));
+        assertThat(tokens.get(2).getType(), is(RingelnatterParser.INDENT));
+        assertThat(tokens.get(3).getType(), is(RingelnatterLexer.IDENTIFIER));
+        assertThat(tokens.get(4).getType(), is(RingelnatterLexer.NEWLINE));
+        assertThat(tokens.get(5).getType(), is(RingelnatterParser.DEDENT));
+        assertThat(tokens.get(6).getType(), is(RingelnatterLexer.EOF));
+    }
+
     private List<Token> getTokensFromText(String txt) throws IOException {
         ByteArrayInputStream iStream = new ByteArrayInputStream(txt.getBytes());
         CharStream cStream = CharStreams.fromStream(iStream);

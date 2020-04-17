@@ -118,10 +118,9 @@ public class SimpleTests extends RingelnatterProgramTest {
     public void callFunction() {
         String result = executeProgram("fn main():\n" +
                 "  ret x()\n" +
-                ";\n" +
+                "\n" +
                 "fn x():\n" +
-                "  ret 10\n" +
-                ";");
+                "  ret 10\n");
         assertThat (result, is("10"));
     }
 
@@ -129,8 +128,7 @@ public class SimpleTests extends RingelnatterProgramTest {
     public void returnVariable() {
         String result = executeProgram("fn main():\n" +
                 "  let a = 10\n" +
-                "  ret a\n" +
-                ";");
+                "  ret a\n");
         assertThat (result, is("10"));
     }
 
@@ -141,8 +139,7 @@ public class SimpleTests extends RingelnatterProgramTest {
                 "  let b = a * 3\n" +
                 "  let c = a + b\n" +
                 "  let d = 50\n" +
-                "  ret c - d\n" +
-                ";");
+                "  ret c - d\n");
         assertThat (result, is("350"));
     }
 }
