@@ -11,6 +11,7 @@ import com.oracle.truffle.sl.RingelnatterLanguage;
 import com.oracle.truffle.sl.RingelnatterRootNode;
 import com.oracle.truffle.sl.nodes.*;
 import com.oracle.truffle.sl.nodes.expression.*;
+import com.oracle.truffle.sl.runtime.ListTruffleObject;
 import com.oracle.truffle.sl.runtime.RingelnatterFunctionRegistry;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -112,7 +113,16 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
     }
 
     private ExpressionNode parseExpression(RingelnatterParser.ExpressionContext context) {
-        return parseLogicalTerm(context.logical_term());
+        if(context.logical_term() != null)
+            return parseLogicalTerm(context.logical_term());
+        return parseExpressionList(context.expression());
+    }
+
+    private ExpressionNode parseExpressionList(List<RingelnatterParser.ExpressionContext> elements) {
+        LinkedList<ExpressionNode> list = new LinkedList<>();
+        for (RingelnatterParser.ExpressionContext element : elements)
+            list.add(parseExpression(element));
+        return new ListValueNode(list);
     }
 
     private ExpressionNode parseLogicalTerm(RingelnatterParser.Logical_termContext context){

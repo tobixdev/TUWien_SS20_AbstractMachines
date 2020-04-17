@@ -88,7 +88,9 @@ suite: INDENT (stmnt NEWLINE)+ DEDENT;
 stmnt: 'let' IDENTIFIER '=' expression |
        'ret' expression;
 
-expression: logical_term;
+expression:
+    logical_term |
+    '[' expression? ( ',' expression)* ']';
 logical_term: logical_factor (op=('&&' | '||') logical_factor)*;
 logical_factor: arithmetic (op=('==' | '!=' | '>' | '<' | '>=' | '<=') arithmetic)*;
 arithmetic: term (op=('+' | '-') term)*;

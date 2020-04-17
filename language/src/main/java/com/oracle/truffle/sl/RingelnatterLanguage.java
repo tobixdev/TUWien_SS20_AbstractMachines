@@ -14,6 +14,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
+import java.util.LinkedList;
 import java.util.Map;
 
 @TruffleLanguage.Registration(id = RingelnatterLanguage.ID, name = "Rngl", defaultMimeType = RingelnatterLanguage.MIME_TYPE, characterMimeTypes = RingelnatterLanguage.MIME_TYPE, contextPolicy = ContextPolicy.SHARED, fileTypeDetectors = RingelnatterFileDetector.class)
@@ -52,6 +53,6 @@ public final class RingelnatterLanguage extends TruffleLanguage<RingelnatterCont
 
     @Override
     protected boolean isObjectOfLanguage(Object object) {
-        return false;
+        return object.getClass() == Long.class || object.getClass() == LinkedList.class;
     }
 }

@@ -115,6 +115,26 @@ public class SimpleTests extends RingelnatterProgramTest {
     }
 
     @Test
+    public void simpleList_empty() {
+        assertThat (executeExpression("[]"), is("[]"));
+    }
+
+    @Test
+    public void simpleList_one() {
+        assertThat (executeExpression("[1]"), is("[1]"));
+    }
+
+    @Test
+    public void simpleList_multiple() {
+        assertThat (executeExpression("[1,2+5]"), is("[1,7]"));
+    }
+
+    @Test
+    public void simpleList_nested() {
+        assertThat (executeExpression("[1,[2,3]]"), is("[1,[2,3]]"));
+    }
+
+    @Test
     public void callFunction() {
         String result = executeProgram("fn main():\n" +
                 "  ret x()\n" +
