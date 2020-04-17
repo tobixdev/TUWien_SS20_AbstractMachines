@@ -15,7 +15,7 @@
             </activation>
             <properties>
                 <!-- unfortunately the default path format C:\.. is invalid, thus project.build.directory is (probably) not possible -->
-                <jar.dir>/Development/TUWien_SS20_AbstractMachines/language/jars</jar.dir>
+                <jar.dir>/mnt/c/Development/TUWien_SS20_AbstractMachines/language/jars</jar.dir>
                 <test.argLine>--upgrade-module-path='${jar.dir}/truffle-api.jar' --add-opens org.graalvm.sdk/org.graalvm.polyglot=ALL-UNNAMED --add-exports java.base/jdk.internal.module=ALL-UNNAMED</test.argLine>
             </properties>
             <build>
