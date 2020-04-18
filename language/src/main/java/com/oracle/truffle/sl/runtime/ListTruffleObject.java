@@ -7,13 +7,18 @@ import com.oracle.truffle.api.library.ExportMessage;
 import com.oracle.truffle.sl.nodes.ExpressionNode;
 
 import java.util.LinkedList;
+import java.util.List;
 
 @ExportLibrary(InteropLibrary.class)
 public class ListTruffleObject implements TruffleObject {
     private LinkedList<Object> elements = new LinkedList<>();
 
-    public void add(Object expressionNode) {
-        elements.add(expressionNode);
+    public void add(Object element) {
+        elements.add(element);
+    }
+
+    public void addAll(ListTruffleObject element) {
+        elements.addAll(element.elements);
     }
 
     public String toString(){

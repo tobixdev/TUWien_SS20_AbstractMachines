@@ -113,9 +113,19 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
     }
 
     private ExpressionNode parseExpression(RingelnatterParser.ExpressionContext context) {
-        if(context.logical_term() != null)
+        if(context.logical_term() != null) {
             return parseLogicalTerm(context.logical_term());
+        } else if (context.factor().size() > 0) {
+            return parseConcatenation(context.factor());
+        }
         return parseExpressionList(context.expression());
+    }
+
+    private ExpressionNode parseConcatenation(List<RingelnatterParser.FactorContext> factors) {
+        LinkedList<ExpressionNode> list = new LinkedList<>();
+        for (RingelnatterParser.FactorContext factor : factors)
+            list.add(parseFactor(factor));
+        return new ConcatNode(list.toArray(new ExpressionNode[0]));
     }
 
     private ExpressionNode parseExpressionList(List<RingelnatterParser.ExpressionContext> elements) {

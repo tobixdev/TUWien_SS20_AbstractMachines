@@ -135,6 +135,16 @@ public class SimpleTests extends RingelnatterProgramTest {
     }
 
     @Test
+    public void simpleConcatenation() {
+        assertThat (executeExpression("1.2"), is("[1,2]"));
+    }
+
+    @Test
+    public void simpleConcatenation_appendedToList() {
+        assertThat (executeExpression("([1]).2"), is("[1,2]"));
+    }
+
+    @Test
     public void callFunction() {
         String result = executeProgram("fn main():\n" +
                 "  ret x()\n" +

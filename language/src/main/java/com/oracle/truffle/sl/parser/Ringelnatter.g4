@@ -90,6 +90,7 @@ stmnt: 'let' IDENTIFIER '=' expression |
 
 expression:
     logical_term |
+    factor ('.' factor)+ |
     '[' expression? ( ',' expression)* ']';
 logical_term: logical_factor (op=('&&' | '||') logical_factor)*;
 logical_factor: arithmetic (op=('==' | '!=' | '>' | '<' | '>=' | '<=') arithmetic)*;

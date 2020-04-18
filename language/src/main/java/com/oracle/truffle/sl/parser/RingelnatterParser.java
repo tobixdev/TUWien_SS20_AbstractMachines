@@ -20,8 +20,8 @@ public class RingelnatterParser extends Parser {
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
 		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
-		T__24=25, T__25=26, T__26=27, LINE_COMMENT=28, IDENTIFIER=29, NUMERIC_LITERAL=30, 
-		WS=31, NEWLINE=32, INDENT=33, DEDENT=34;
+		T__24=25, T__25=26, T__26=27, T__27=28, LINE_COMMENT=29, IDENTIFIER=30, 
+		NUMERIC_LITERAL=31, WS=32, NEWLINE=33, INDENT=34, DEDENT=35;
 	public static final int
 		RULE_ringelnatter = 0, RULE_function = 1, RULE_suite = 2, RULE_stmnt = 3, 
 		RULE_expression = 4, RULE_logical_term = 5, RULE_logical_factor = 6, RULE_arithmetic = 7, 
@@ -32,14 +32,14 @@ public class RingelnatterParser extends Parser {
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "'fn'", "'('", "','", "'):'", "'let'", "'='", "'ret'", "'['", "']'", 
-		"'&&'", "'||'", "'=='", "'!='", "'>'", "'<'", "'>='", "'<='", "'+'", "'-'", 
-		"'*'", "'/'", "'%'", "'!'", "'is'", "')'", "'number'", "'list'"
+		null, "'fn'", "'('", "','", "'):'", "'let'", "'='", "'ret'", "'.'", "'['", 
+		"']'", "'&&'", "'||'", "'=='", "'!='", "'>'", "'<'", "'>='", "'<='", "'+'", 
+		"'-'", "'*'", "'/'", "'%'", "'!'", "'is'", "')'", "'number'", "'list'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, "LINE_COMMENT", "IDENTIFIER", "NUMERIC_LITERAL", 
+		null, null, null, null, null, "LINE_COMMENT", "IDENTIFIER", "NUMERIC_LITERAL", 
 		"WS", "NEWLINE", "INDENT", "DEDENT"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
@@ -385,6 +385,12 @@ public class RingelnatterParser extends Parser {
 		public Logical_termContext logical_term() {
 			return getRuleContext(Logical_termContext.class,0);
 		}
+		public List<FactorContext> factor() {
+			return getRuleContexts(FactorContext.class);
+		}
+		public FactorContext factor(int i) {
+			return getRuleContext(FactorContext.class,i);
+		}
 		public List<ExpressionContext> expression() {
 			return getRuleContexts(ExpressionContext.class);
 		}
@@ -410,56 +416,74 @@ public class RingelnatterParser extends Parser {
 		enterRule(_localctx, 8, RULE_expression);
 		int _la;
 		try {
-			setState(79);
+			setState(86);
 			_errHandler.sync(this);
-			switch (_input.LA(1)) {
-			case T__1:
-			case T__22:
-			case IDENTIFIER:
-			case NUMERIC_LITERAL:
+			switch ( getInterpreter().adaptivePredict(_input,9,_ctx) ) {
+			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(66);
 				logical_term();
 				}
 				break;
-			case T__7:
+			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(67);
-				match(T__7);
-				setState(69);
+				factor(0);
+				setState(70); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__1) | (1L << T__7) | (1L << T__22) | (1L << IDENTIFIER) | (1L << NUMERIC_LITERAL))) != 0)) {
+				do {
+					{
 					{
 					setState(68);
+					match(T__7);
+					setState(69);
+					factor(0);
+					}
+					}
+					setState(72); 
+					_errHandler.sync(this);
+					_la = _input.LA(1);
+				} while ( _la==T__7 );
+				}
+				break;
+			case 3:
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(74);
+				match(T__8);
+				setState(76);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__1) | (1L << T__8) | (1L << T__23) | (1L << IDENTIFIER) | (1L << NUMERIC_LITERAL))) != 0)) {
+					{
+					setState(75);
 					expression();
 					}
 				}
 
-				setState(75);
+				setState(82);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				while (_la==T__2) {
 					{
 					{
-					setState(71);
+					setState(78);
 					match(T__2);
-					setState(72);
+					setState(79);
 					expression();
 					}
 					}
-					setState(77);
+					setState(84);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
-				setState(78);
-				match(T__8);
+				setState(85);
+				match(T__9);
 				}
 				break;
-			default:
-				throw new NoViableAltException(this);
 			}
 		}
 		catch (RecognitionException re) {
@@ -502,18 +526,18 @@ public class RingelnatterParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(81);
+			setState(88);
 			logical_factor();
-			setState(86);
+			setState(93);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__9 || _la==T__10) {
+			while (_la==T__10 || _la==T__11) {
 				{
 				{
-				setState(82);
+				setState(89);
 				((Logical_termContext)_localctx).op = _input.LT(1);
 				_la = _input.LA(1);
-				if ( !(_la==T__9 || _la==T__10) ) {
+				if ( !(_la==T__10 || _la==T__11) ) {
 					((Logical_termContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 				}
 				else {
@@ -521,11 +545,11 @@ public class RingelnatterParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(83);
+				setState(90);
 				logical_factor();
 				}
 				}
-				setState(88);
+				setState(95);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -571,18 +595,18 @@ public class RingelnatterParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(89);
+			setState(96);
 			arithmetic();
-			setState(94);
+			setState(101);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__11) | (1L << T__12) | (1L << T__13) | (1L << T__14) | (1L << T__15) | (1L << T__16))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__12) | (1L << T__13) | (1L << T__14) | (1L << T__15) | (1L << T__16) | (1L << T__17))) != 0)) {
 				{
 				{
-				setState(90);
+				setState(97);
 				((Logical_factorContext)_localctx).op = _input.LT(1);
 				_la = _input.LA(1);
-				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__11) | (1L << T__12) | (1L << T__13) | (1L << T__14) | (1L << T__15) | (1L << T__16))) != 0)) ) {
+				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__12) | (1L << T__13) | (1L << T__14) | (1L << T__15) | (1L << T__16) | (1L << T__17))) != 0)) ) {
 					((Logical_factorContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 				}
 				else {
@@ -590,11 +614,11 @@ public class RingelnatterParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(91);
+				setState(98);
 				arithmetic();
 				}
 				}
-				setState(96);
+				setState(103);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -640,18 +664,18 @@ public class RingelnatterParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(97);
+			setState(104);
 			term();
-			setState(102);
+			setState(109);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__17 || _la==T__18) {
+			while (_la==T__18 || _la==T__19) {
 				{
 				{
-				setState(98);
+				setState(105);
 				((ArithmeticContext)_localctx).op = _input.LT(1);
 				_la = _input.LA(1);
-				if ( !(_la==T__17 || _la==T__18) ) {
+				if ( !(_la==T__18 || _la==T__19) ) {
 					((ArithmeticContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 				}
 				else {
@@ -659,11 +683,11 @@ public class RingelnatterParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(99);
+				setState(106);
 				term();
 				}
 				}
-				setState(104);
+				setState(111);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -709,18 +733,18 @@ public class RingelnatterParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(105);
+			setState(112);
 			factor(0);
-			setState(110);
+			setState(117);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__19) | (1L << T__20) | (1L << T__21))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__20) | (1L << T__21) | (1L << T__22))) != 0)) {
 				{
 				{
-				setState(106);
+				setState(113);
 				((TermContext)_localctx).op = _input.LT(1);
 				_la = _input.LA(1);
-				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__19) | (1L << T__20) | (1L << T__21))) != 0)) ) {
+				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__20) | (1L << T__21) | (1L << T__22))) != 0)) ) {
 					((TermContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 				}
 				else {
@@ -728,11 +752,11 @@ public class RingelnatterParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(107);
+				setState(114);
 				factor(0);
 				}
 				}
-				setState(112);
+				setState(119);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -797,80 +821,80 @@ public class RingelnatterParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(135);
+			setState(142);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,15,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,16,_ctx) ) {
 			case 1:
 				{
-				setState(114);
-				((FactorContext)_localctx).op = match(T__22);
-				setState(115);
+				setState(121);
+				((FactorContext)_localctx).op = match(T__23);
+				setState(122);
 				factor(6);
 				}
 				break;
 			case 2:
 				{
-				setState(116);
+				setState(123);
 				match(NUMERIC_LITERAL);
 				}
 				break;
 			case 3:
 				{
-				setState(117);
+				setState(124);
 				((FactorContext)_localctx).var = match(IDENTIFIER);
 				}
 				break;
 			case 4:
 				{
-				setState(118);
+				setState(125);
 				match(T__1);
-				setState(119);
+				setState(126);
 				expression();
-				setState(120);
-				match(T__24);
+				setState(127);
+				match(T__25);
 				}
 				break;
 			case 5:
 				{
-				setState(122);
+				setState(129);
 				((FactorContext)_localctx).target = match(IDENTIFIER);
-				setState(123);
+				setState(130);
 				match(T__1);
-				setState(125);
+				setState(132);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__1) | (1L << T__7) | (1L << T__22) | (1L << IDENTIFIER) | (1L << NUMERIC_LITERAL))) != 0)) {
+				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__1) | (1L << T__8) | (1L << T__23) | (1L << IDENTIFIER) | (1L << NUMERIC_LITERAL))) != 0)) {
 					{
-					setState(124);
+					setState(131);
 					expression();
 					}
 				}
 
-				setState(131);
+				setState(138);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				while (_la==T__2) {
 					{
 					{
-					setState(127);
+					setState(134);
 					match(T__2);
-					setState(128);
+					setState(135);
 					expression();
 					}
 					}
-					setState(133);
+					setState(140);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
-				setState(134);
-				match(T__24);
+				setState(141);
+				match(T__25);
 				}
 				break;
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(142);
+			setState(149);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,16,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,17,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
@@ -879,18 +903,18 @@ public class RingelnatterParser extends Parser {
 					{
 					_localctx = new FactorContext(_parentctx, _parentState);
 					pushNewRecursionContext(_localctx, _startState, RULE_factor);
-					setState(137);
+					setState(144);
 					if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
-					setState(138);
-					((FactorContext)_localctx).op = match(T__23);
-					setState(139);
+					setState(145);
+					((FactorContext)_localctx).op = match(T__24);
+					setState(146);
 					typename();
 					}
 					} 
 				}
-				setState(144);
+				setState(151);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,16,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,17,_ctx);
 			}
 			}
 		}
@@ -927,9 +951,9 @@ public class RingelnatterParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(145);
+			setState(152);
 			_la = _input.LA(1);
-			if ( !(_la==T__25 || _la==T__26) ) {
+			if ( !(_la==T__26 || _la==T__27) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -966,48 +990,50 @@ public class RingelnatterParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3$\u0096\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3%\u009d\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\3\2\3\2\7\2\33\n\2\f\2\16\2\36\13\2\3\2\3\2\3\3\3\3\3\3\3"+
 		"\3\5\3&\n\3\3\3\3\3\7\3*\n\3\f\3\16\3-\13\3\3\3\3\3\3\3\3\3\3\4\3\4\3"+
 		"\4\3\4\6\4\67\n\4\r\4\16\48\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\5\5\5C\n\5\3"+
-		"\6\3\6\3\6\5\6H\n\6\3\6\3\6\7\6L\n\6\f\6\16\6O\13\6\3\6\5\6R\n\6\3\7\3"+
-		"\7\3\7\7\7W\n\7\f\7\16\7Z\13\7\3\b\3\b\3\b\7\b_\n\b\f\b\16\bb\13\b\3\t"+
-		"\3\t\3\t\7\tg\n\t\f\t\16\tj\13\t\3\n\3\n\3\n\7\no\n\n\f\n\16\nr\13\n\3"+
-		"\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\5\13\u0080"+
-		"\n\13\3\13\3\13\7\13\u0084\n\13\f\13\16\13\u0087\13\13\3\13\5\13\u008a"+
-		"\n\13\3\13\3\13\3\13\7\13\u008f\n\13\f\13\16\13\u0092\13\13\3\f\3\f\3"+
-		"\f\2\3\24\r\2\4\6\b\n\f\16\20\22\24\26\2\7\3\2\f\r\3\2\16\23\3\2\24\25"+
-		"\3\2\26\30\3\2\34\35\2\u009e\2\34\3\2\2\2\4!\3\2\2\2\6\62\3\2\2\2\bB\3"+
-		"\2\2\2\nQ\3\2\2\2\fS\3\2\2\2\16[\3\2\2\2\20c\3\2\2\2\22k\3\2\2\2\24\u0089"+
-		"\3\2\2\2\26\u0093\3\2\2\2\30\33\5\4\3\2\31\33\7\"\2\2\32\30\3\2\2\2\32"+
-		"\31\3\2\2\2\33\36\3\2\2\2\34\32\3\2\2\2\34\35\3\2\2\2\35\37\3\2\2\2\36"+
-		"\34\3\2\2\2\37 \7\2\2\3 \3\3\2\2\2!\"\7\3\2\2\"#\7\37\2\2#%\7\4\2\2$&"+
-		"\7\37\2\2%$\3\2\2\2%&\3\2\2\2&+\3\2\2\2\'(\7\5\2\2(*\7\37\2\2)\'\3\2\2"+
-		"\2*-\3\2\2\2+)\3\2\2\2+,\3\2\2\2,.\3\2\2\2-+\3\2\2\2./\7\6\2\2/\60\7\""+
-		"\2\2\60\61\5\6\4\2\61\5\3\2\2\2\62\66\7#\2\2\63\64\5\b\5\2\64\65\7\"\2"+
-		"\2\65\67\3\2\2\2\66\63\3\2\2\2\678\3\2\2\28\66\3\2\2\289\3\2\2\29:\3\2"+
-		"\2\2:;\7$\2\2;\7\3\2\2\2<=\7\7\2\2=>\7\37\2\2>?\7\b\2\2?C\5\n\6\2@A\7"+
-		"\t\2\2AC\5\n\6\2B<\3\2\2\2B@\3\2\2\2C\t\3\2\2\2DR\5\f\7\2EG\7\n\2\2FH"+
-		"\5\n\6\2GF\3\2\2\2GH\3\2\2\2HM\3\2\2\2IJ\7\5\2\2JL\5\n\6\2KI\3\2\2\2L"+
-		"O\3\2\2\2MK\3\2\2\2MN\3\2\2\2NP\3\2\2\2OM\3\2\2\2PR\7\13\2\2QD\3\2\2\2"+
-		"QE\3\2\2\2R\13\3\2\2\2SX\5\16\b\2TU\t\2\2\2UW\5\16\b\2VT\3\2\2\2WZ\3\2"+
-		"\2\2XV\3\2\2\2XY\3\2\2\2Y\r\3\2\2\2ZX\3\2\2\2[`\5\20\t\2\\]\t\3\2\2]_"+
-		"\5\20\t\2^\\\3\2\2\2_b\3\2\2\2`^\3\2\2\2`a\3\2\2\2a\17\3\2\2\2b`\3\2\2"+
-		"\2ch\5\22\n\2de\t\4\2\2eg\5\22\n\2fd\3\2\2\2gj\3\2\2\2hf\3\2\2\2hi\3\2"+
-		"\2\2i\21\3\2\2\2jh\3\2\2\2kp\5\24\13\2lm\t\5\2\2mo\5\24\13\2nl\3\2\2\2"+
-		"or\3\2\2\2pn\3\2\2\2pq\3\2\2\2q\23\3\2\2\2rp\3\2\2\2st\b\13\1\2tu\7\31"+
-		"\2\2u\u008a\5\24\13\bv\u008a\7 \2\2w\u008a\7\37\2\2xy\7\4\2\2yz\5\n\6"+
-		"\2z{\7\33\2\2{\u008a\3\2\2\2|}\7\37\2\2}\177\7\4\2\2~\u0080\5\n\6\2\177"+
-		"~\3\2\2\2\177\u0080\3\2\2\2\u0080\u0085\3\2\2\2\u0081\u0082\7\5\2\2\u0082"+
-		"\u0084\5\n\6\2\u0083\u0081\3\2\2\2\u0084\u0087\3\2\2\2\u0085\u0083\3\2"+
-		"\2\2\u0085\u0086\3\2\2\2\u0086\u0088\3\2\2\2\u0087\u0085\3\2\2\2\u0088"+
-		"\u008a\7\33\2\2\u0089s\3\2\2\2\u0089v\3\2\2\2\u0089w\3\2\2\2\u0089x\3"+
-		"\2\2\2\u0089|\3\2\2\2\u008a\u0090\3\2\2\2\u008b\u008c\f\7\2\2\u008c\u008d"+
-		"\7\32\2\2\u008d\u008f\5\26\f\2\u008e\u008b\3\2\2\2\u008f\u0092\3\2\2\2"+
-		"\u0090\u008e\3\2\2\2\u0090\u0091\3\2\2\2\u0091\25\3\2\2\2\u0092\u0090"+
-		"\3\2\2\2\u0093\u0094\t\6\2\2\u0094\27\3\2\2\2\23\32\34%+8BGMQX`hp\177"+
-		"\u0085\u0089\u0090";
+		"\6\3\6\3\6\3\6\6\6I\n\6\r\6\16\6J\3\6\3\6\5\6O\n\6\3\6\3\6\7\6S\n\6\f"+
+		"\6\16\6V\13\6\3\6\5\6Y\n\6\3\7\3\7\3\7\7\7^\n\7\f\7\16\7a\13\7\3\b\3\b"+
+		"\3\b\7\bf\n\b\f\b\16\bi\13\b\3\t\3\t\3\t\7\tn\n\t\f\t\16\tq\13\t\3\n\3"+
+		"\n\3\n\7\nv\n\n\f\n\16\ny\13\n\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13"+
+		"\3\13\3\13\3\13\3\13\5\13\u0087\n\13\3\13\3\13\7\13\u008b\n\13\f\13\16"+
+		"\13\u008e\13\13\3\13\5\13\u0091\n\13\3\13\3\13\3\13\7\13\u0096\n\13\f"+
+		"\13\16\13\u0099\13\13\3\f\3\f\3\f\2\3\24\r\2\4\6\b\n\f\16\20\22\24\26"+
+		"\2\7\3\2\r\16\3\2\17\24\3\2\25\26\3\2\27\31\3\2\35\36\2\u00a7\2\34\3\2"+
+		"\2\2\4!\3\2\2\2\6\62\3\2\2\2\bB\3\2\2\2\nX\3\2\2\2\fZ\3\2\2\2\16b\3\2"+
+		"\2\2\20j\3\2\2\2\22r\3\2\2\2\24\u0090\3\2\2\2\26\u009a\3\2\2\2\30\33\5"+
+		"\4\3\2\31\33\7#\2\2\32\30\3\2\2\2\32\31\3\2\2\2\33\36\3\2\2\2\34\32\3"+
+		"\2\2\2\34\35\3\2\2\2\35\37\3\2\2\2\36\34\3\2\2\2\37 \7\2\2\3 \3\3\2\2"+
+		"\2!\"\7\3\2\2\"#\7 \2\2#%\7\4\2\2$&\7 \2\2%$\3\2\2\2%&\3\2\2\2&+\3\2\2"+
+		"\2\'(\7\5\2\2(*\7 \2\2)\'\3\2\2\2*-\3\2\2\2+)\3\2\2\2+,\3\2\2\2,.\3\2"+
+		"\2\2-+\3\2\2\2./\7\6\2\2/\60\7#\2\2\60\61\5\6\4\2\61\5\3\2\2\2\62\66\7"+
+		"$\2\2\63\64\5\b\5\2\64\65\7#\2\2\65\67\3\2\2\2\66\63\3\2\2\2\678\3\2\2"+
+		"\28\66\3\2\2\289\3\2\2\29:\3\2\2\2:;\7%\2\2;\7\3\2\2\2<=\7\7\2\2=>\7 "+
+		"\2\2>?\7\b\2\2?C\5\n\6\2@A\7\t\2\2AC\5\n\6\2B<\3\2\2\2B@\3\2\2\2C\t\3"+
+		"\2\2\2DY\5\f\7\2EH\5\24\13\2FG\7\n\2\2GI\5\24\13\2HF\3\2\2\2IJ\3\2\2\2"+
+		"JH\3\2\2\2JK\3\2\2\2KY\3\2\2\2LN\7\13\2\2MO\5\n\6\2NM\3\2\2\2NO\3\2\2"+
+		"\2OT\3\2\2\2PQ\7\5\2\2QS\5\n\6\2RP\3\2\2\2SV\3\2\2\2TR\3\2\2\2TU\3\2\2"+
+		"\2UW\3\2\2\2VT\3\2\2\2WY\7\f\2\2XD\3\2\2\2XE\3\2\2\2XL\3\2\2\2Y\13\3\2"+
+		"\2\2Z_\5\16\b\2[\\\t\2\2\2\\^\5\16\b\2][\3\2\2\2^a\3\2\2\2_]\3\2\2\2_"+
+		"`\3\2\2\2`\r\3\2\2\2a_\3\2\2\2bg\5\20\t\2cd\t\3\2\2df\5\20\t\2ec\3\2\2"+
+		"\2fi\3\2\2\2ge\3\2\2\2gh\3\2\2\2h\17\3\2\2\2ig\3\2\2\2jo\5\22\n\2kl\t"+
+		"\4\2\2ln\5\22\n\2mk\3\2\2\2nq\3\2\2\2om\3\2\2\2op\3\2\2\2p\21\3\2\2\2"+
+		"qo\3\2\2\2rw\5\24\13\2st\t\5\2\2tv\5\24\13\2us\3\2\2\2vy\3\2\2\2wu\3\2"+
+		"\2\2wx\3\2\2\2x\23\3\2\2\2yw\3\2\2\2z{\b\13\1\2{|\7\32\2\2|\u0091\5\24"+
+		"\13\b}\u0091\7!\2\2~\u0091\7 \2\2\177\u0080\7\4\2\2\u0080\u0081\5\n\6"+
+		"\2\u0081\u0082\7\34\2\2\u0082\u0091\3\2\2\2\u0083\u0084\7 \2\2\u0084\u0086"+
+		"\7\4\2\2\u0085\u0087\5\n\6\2\u0086\u0085\3\2\2\2\u0086\u0087\3\2\2\2\u0087"+
+		"\u008c\3\2\2\2\u0088\u0089\7\5\2\2\u0089\u008b\5\n\6\2\u008a\u0088\3\2"+
+		"\2\2\u008b\u008e\3\2\2\2\u008c\u008a\3\2\2\2\u008c\u008d\3\2\2\2\u008d"+
+		"\u008f\3\2\2\2\u008e\u008c\3\2\2\2\u008f\u0091\7\34\2\2\u0090z\3\2\2\2"+
+		"\u0090}\3\2\2\2\u0090~\3\2\2\2\u0090\177\3\2\2\2\u0090\u0083\3\2\2\2\u0091"+
+		"\u0097\3\2\2\2\u0092\u0093\f\7\2\2\u0093\u0094\7\33\2\2\u0094\u0096\5"+
+		"\26\f\2\u0095\u0092\3\2\2\2\u0096\u0099\3\2\2\2\u0097\u0095\3\2\2\2\u0097"+
+		"\u0098\3\2\2\2\u0098\25\3\2\2\2\u0099\u0097\3\2\2\2\u009a\u009b\t\6\2"+
+		"\2\u009b\27\3\2\2\2\24\32\34%+8BJNTX_gow\u0086\u008c\u0090\u0097";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
