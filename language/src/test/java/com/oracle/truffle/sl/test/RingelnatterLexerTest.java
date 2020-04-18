@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.BitSet;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
@@ -95,6 +96,64 @@ public class RingelnatterLexerTest {
         assertThat(tokens.get(4).getType(), is(RingelnatterLexer.NEWLINE));
         assertThat(tokens.get(5).getType(), is(RingelnatterParser.DEDENT));
         assertThat(tokens.get(6).getType(), is(RingelnatterLexer.EOF));
+    }
+
+    @Test
+    public void lexer_indentsNested() throws IOException {
+        List<Token> tokens = getTokensFromText("xyz\n"+
+                "  xyz\n" +
+                "    xyz");
+
+        assertThat(tokens.size(), is(11));
+        assertThat(tokens.get(0).getType(), is(RingelnatterLexer.IDENTIFIER));
+        assertThat(tokens.get(1).getType(), is(RingelnatterLexer.NEWLINE));
+        assertThat(tokens.get(2).getType(), is(RingelnatterParser.INDENT));
+        assertThat(tokens.get(3).getType(), is(RingelnatterLexer.IDENTIFIER));
+        assertThat(tokens.get(4).getType(), is(RingelnatterLexer.NEWLINE));
+        assertThat(tokens.get(5).getType(), is(RingelnatterParser.INDENT));
+        assertThat(tokens.get(6).getType(), is(RingelnatterLexer.IDENTIFIER));
+        assertThat(tokens.get(7).getType(), is(RingelnatterLexer.NEWLINE));
+        assertThat(tokens.get(8).getType(), is(RingelnatterParser.DEDENT));
+        assertThat(tokens.get(9).getType(), is(RingelnatterParser.DEDENT));
+        assertThat(tokens.get(10).getType(), is(RingelnatterLexer.EOF));
+    }
+
+    @Test
+    public void lexer_moreComplex() throws IOException {
+        List<Token> tokens = getTokensFromText("fn main():\n" +
+                "  let a = 100\n" +
+                "  if a > 100:\n" +
+                "    ret 1\n" +
+                "  ret 0\n");
+
+        assertThat(tokens.size(), is(27));
+        assertThat(tokens.get(0).getText(), is("fn"));
+        assertThat(tokens.get(1).getText(), is("main"));
+        assertThat(tokens.get(2).getText(), is("("));
+        assertThat(tokens.get(3).getText(), is("):"));
+        assertThat(tokens.get(4).getType(), is(RingelnatterLexer.NEWLINE));
+        assertThat(tokens.get(5).getType(), is(RingelnatterParser.INDENT));
+        assertThat(tokens.get(6).getText(), is("let"));
+        assertThat(tokens.get(7).getText(), is("a"));
+        assertThat(tokens.get(8).getText(), is("="));
+        assertThat(tokens.get(9).getText(), is("100"));
+        assertThat(tokens.get(10).getType(), is(RingelnatterLexer.NEWLINE));
+        assertThat(tokens.get(11).getText(), is("if"));
+        assertThat(tokens.get(12).getText(), is("a"));
+        assertThat(tokens.get(13).getText(), is(">"));
+        assertThat(tokens.get(14).getText(), is("100"));
+        assertThat(tokens.get(15).getText(), is(":"));
+        assertThat(tokens.get(16).getType(), is(RingelnatterLexer.NEWLINE));
+        assertThat(tokens.get(17).getType(), is(RingelnatterParser.INDENT));
+        assertThat(tokens.get(18).getText(), is("ret"));
+        assertThat(tokens.get(19).getText(), is("1"));
+        assertThat(tokens.get(20).getType(), is(RingelnatterLexer.NEWLINE));
+        assertThat(tokens.get(21).getType(), is(RingelnatterParser.DEDENT));
+        assertThat(tokens.get(22).getText(), is("ret"));
+        assertThat(tokens.get(23).getText(), is("0"));
+        assertThat(tokens.get(24).getType(), is(RingelnatterLexer.NEWLINE));
+        assertThat(tokens.get(25).getType(), is(RingelnatterParser.DEDENT));
+        assertThat(tokens.get(26).getType(), is(RingelnatterLexer.EOF));
     }
 
     private List<Token> getTokensFromText(String txt) throws IOException {

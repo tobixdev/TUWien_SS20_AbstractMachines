@@ -42,6 +42,7 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
     private List<StatementNode> statementNodes;
 
     // state for suites
+    private boolean autoAddSuite = true;
     private Stack<List<StatementNode>> suites;
     private SuiteNode lastExitedSuite;
 
@@ -96,9 +97,8 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         SuiteNode suite = new SuiteNode(nodes.toArray(new StatementNode[0]));
         if(suites.size() > 0) {
             suites.peek().add(suite);
-        }else {
-            lastExitedSuite = suite;
         }
+        lastExitedSuite = suite;
     }
 
     @Override
@@ -109,6 +109,10 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         } else if(ctx.start.getText().equals("let")) {
             verifyNonExistenceOfLocal(lexicalScope, ctx.IDENTIFIER());
             currentSuite.add(createLocalVariable(ctx.IDENTIFIER().getText(), parseExpression(ctx.expression())));
+        } else if(ctx.start.getText().equals("if")){
+            ExpressionNode conditionalExpression = parseExpression(ctx.expression());
+            currentSuite.remove(lastExitedSuite);
+            currentSuite.add(new IfNode(ConditionalNodeGen.create(conditionalExpression), lastExitedSuite));
         }
     }
 

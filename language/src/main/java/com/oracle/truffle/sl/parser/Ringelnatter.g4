@@ -83,10 +83,11 @@ ringelnatter: (function | NEWLINE)* EOF;
 
 function: 'fn' IDENTIFIER '(' IDENTIFIER? (',' IDENTIFIER)* '):' NEWLINE suite;
 
-suite: INDENT (stmnt NEWLINE)+ DEDENT;
+suite: INDENT (stmnt)+ DEDENT;
 
-stmnt: 'let' IDENTIFIER '=' expression |
-       'ret' expression;
+stmnt: 'let' IDENTIFIER '=' expression NEWLINE |
+       'ret' expression NEWLINE |
+       'if' expression ':' NEWLINE suite;
 
 expression:
     logical_term |

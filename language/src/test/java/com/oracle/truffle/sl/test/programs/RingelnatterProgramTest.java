@@ -1,6 +1,8 @@
 package com.oracle.truffle.sl.test.programs;
 
 import com.oracle.truffle.sl.RingelnatterLanguage;
+import com.oracle.truffle.sl.parser.RingelnatterLexer;
+import com.oracle.truffle.sl.test.RingelnatterLexerTest;
 import org.graalvm.polyglot.Context;
 
 public class RingelnatterProgramTest {
