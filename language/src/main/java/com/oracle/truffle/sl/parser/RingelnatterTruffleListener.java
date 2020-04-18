@@ -14,6 +14,7 @@ import com.oracle.truffle.sl.nodes.expression.*;
 import com.oracle.truffle.sl.runtime.ListTruffleObject;
 import com.oracle.truffle.sl.runtime.RingelnatterFunctionRegistry;
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.*;
@@ -107,12 +108,22 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         if(ctx.start.getText().equals("ret")) {
             currentSuite.add(new ReturnNode(parseExpression(ctx.expression())));
         } else if(ctx.start.getText().equals("let")) {
-            verifyNonExistenceOfLocal(lexicalScope, ctx.IDENTIFIER());
+            verifyNonExistenceOfLocal(lexicalScope, ctx.var);
             currentSuite.add(createLocalVariable(ctx.IDENTIFIER().getText(), parseExpression(ctx.expression())));
         } else if(ctx.start.getText().equals("if")){
             ExpressionNode conditionalExpression = parseExpression(ctx.expression());
             currentSuite.remove(lastExitedSuite);
             currentSuite.add(new IfNode(ConditionalNodeGen.create(conditionalExpression), lastExitedSuite));
+        } else if(ctx.start.getText().equals("while")){
+            ExpressionNode conditionalExpression = parseExpression(ctx.expression());
+            currentSuite.remove(lastExitedSuite);
+            currentSuite.add(new WhileNode(ConditionalNodeGen.create(conditionalExpression), lastExitedSuite));
+        } else if(ctx.var != null){
+            ExpressionNode expression = parseExpression(ctx.expression());
+            FrameSlot frameSlot = getLocalVariable(ctx.var);
+            currentSuite.add(WriteLocalVariableNodeGen.create(expression, frameSlot));
+        } else {
+            throw new UnsupportedOperationException("Statement unknown");
         }
     }
 
@@ -197,7 +208,7 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         } else if (context.NUMERIC_LITERAL() != null) {
             return new LongValueNode(Long.parseLong(context.NUMERIC_LITERAL().getText()));
         } else if (context.var != null) {
-            verifyExistenceOfLocal(lexicalScope, context.IDENTIFIER());
+            verifyExistenceOfLocal(lexicalScope, context.var);
             FrameSlot slot = frameDescriptor.findFrameSlot(context.var.getText());
             return ReadLocalVariableNodeGen.create(slot);
         } else if (context.target != null) {
@@ -243,28 +254,32 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         throw new UnsupportedOperationException("Operator " + op + " not supported");
     }
 
-    private void verifyExistenceOfLocal(LexicalScope scope, TerminalNode node) {
-        verifyExistenceOfLocal(scope, node, true);
+    private void verifyExistenceOfLocal(LexicalScope scope, Token identifier) {
+        verifyExistenceOfLocal(scope, identifier, true);
     }
 
-    private void verifyNonExistenceOfLocal(LexicalScope scope, TerminalNode node) {
-        verifyExistenceOfLocal(scope, node, false);
+    private void verifyNonExistenceOfLocal(LexicalScope scope, Token identifier) {
+        verifyExistenceOfLocal(scope, identifier, false);
     }
 
-    private void verifyExistenceOfLocal(LexicalScope scope, TerminalNode node, boolean shouldExist) {
-        if (scope.locals.containsKey(node.getText()) != shouldExist) {
-            Token symbol = node.getSymbol();
-            int beginChar = symbol.getCharPositionInLine();
-            int endChar = beginChar + node.getText().length();
+    private void verifyExistenceOfLocal(LexicalScope scope, Token identifier, boolean shouldExist) {
+        if (scope.locals.containsKey(identifier.getText()) != shouldExist) {
+            int beginChar = identifier.getCharPositionInLine();
+            int endChar = beginChar + identifier.getText().length();
             String reason = shouldExist ? " does not exist" : " was already defined";
-            throw new RingelnatterParseError(source, symbol.getLine(), beginChar, endChar, "The local variable '" + node.getText() + "' " + reason + ".");
+            throw new RingelnatterParseError(source, identifier.getLine(), beginChar, endChar, "The local variable '" + identifier.getText() + "' " + reason + ".");
         }
     }
 
-    private WriteLocalVariableNode createLocalVariable(String parameterName, ExpressionNode readArgumentNode) {
-        FrameSlot frameSlot = frameDescriptor.addFrameSlot(parameterName, FrameSlotKind.Illegal);
-        WriteLocalVariableNode writeLocalVariableNode = WriteLocalVariableNodeGen.create(readArgumentNode, frameSlot);
-        lexicalScope.locals.put(parameterName, frameSlot);
+    private WriteLocalVariableNode createLocalVariable(String variableName, ExpressionNode value) {
+        FrameSlot frameSlot = frameDescriptor.addFrameSlot(variableName, FrameSlotKind.Illegal);
+        WriteLocalVariableNode writeLocalVariableNode = WriteLocalVariableNodeGen.create(value, frameSlot);
+        lexicalScope.locals.put(variableName, frameSlot);
         return writeLocalVariableNode;
+    }
+
+    private FrameSlot getLocalVariable(Token identifier) {
+        verifyExistenceOfLocal(lexicalScope, identifier);
+        return frameDescriptor.findFrameSlot(identifier.getText());
     }
 }

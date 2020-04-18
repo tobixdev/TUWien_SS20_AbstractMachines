@@ -163,6 +163,15 @@ public class SimpleTests extends RingelnatterProgramTest {
     }
 
     @Test
+    public void assignment() {
+        String result = executeProgram("fn main():\n" +
+                "  let a = 10\n" +
+                "  a = 0\n" +
+                "  ret a\n");
+        assertThat (result, is("0"));
+    }
+
+    @Test
     public void returnComplexVariables() {
         String result = executeProgram("fn main():\n" +
                 "  let a = 100\n" +

@@ -25,4 +25,28 @@ public class ControlFlowTests extends RingelnatterProgramTest {
                 "  ret 0\n");
         assertThat (result, is("0"));
     }
+
+    @Test
+    public void whilestmnt_true() {
+        String result = executeProgram("fn main():\n" +
+                "  let a = 100\n" +
+                "  let b = 0\n" +
+                "  while a > 50:\n" +
+                "    a = a - 1\n" +
+                "    b = b + 1\n" +
+                "  ret b\n");
+        assertThat (result, is("50"));
+    }
+
+    @Test
+    public void whilestmnt_false() {
+        String result = executeProgram("fn main():\n" +
+                "  let a = 100\n" +
+                "  let b = 0\n" +
+                "  while a < 0:\n" +
+                "    a = a - 1\n" +
+                "    b = b + 1\n" +
+                "  ret b\n");
+        assertThat (result, is("0"));
+    }
 }

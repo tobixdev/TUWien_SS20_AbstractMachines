@@ -85,9 +85,11 @@ function: 'fn' IDENTIFIER '(' IDENTIFIER? (',' IDENTIFIER)* '):' NEWLINE suite;
 
 suite: INDENT (stmnt)+ DEDENT;
 
-stmnt: 'let' IDENTIFIER '=' expression NEWLINE |
+stmnt: var=IDENTIFIER '=' expression NEWLINE |
+       'let' var=IDENTIFIER '=' expression NEWLINE |
        'ret' expression NEWLINE |
-       'if' expression ':' NEWLINE suite;
+       'if' expression ':' NEWLINE suite |
+       'while' expression ':' NEWLINE suite;
 
 expression:
     logical_term |
