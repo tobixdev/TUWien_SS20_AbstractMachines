@@ -11,7 +11,15 @@ import java.util.List;
 
 @ExportLibrary(InteropLibrary.class)
 public class ListTruffleObject implements TruffleObject {
-    private LinkedList<Object> elements = new LinkedList<>();
+    private LinkedList<Object> elements;
+
+    public ListTruffleObject() {
+        this(new LinkedList<>());
+    }
+
+    public ListTruffleObject(LinkedList<Object> elements) {
+        this.elements = elements;
+    }
 
     public void add(Object element) {
         elements.add(element);
@@ -30,6 +38,12 @@ public class ListTruffleObject implements TruffleObject {
             sb.setLength(sb.length() - 1);
         sb.append(']');
         return sb.toString();
+    }
+
+    public ListTruffleObject subList (int fromIndex, int toIndex) {
+        List<Object> subList = elements.subList(fromIndex, toIndex);
+        LinkedList<Object> linkedList = new LinkedList<>(subList);
+        return new ListTruffleObject(linkedList);
     }
 
     @ExportMessage

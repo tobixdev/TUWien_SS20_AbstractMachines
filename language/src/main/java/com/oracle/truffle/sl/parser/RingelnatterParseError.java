@@ -13,12 +13,12 @@ public class RingelnatterParseError extends RuntimeException implements TruffleE
     private final int column;
     private final int length;
 
-    public RingelnatterParseError(Source source, int line, int column, int length, String message) {
+    public RingelnatterParseError(Source source, int line, int column, int columnEnd, String message) {
         super(message);
         this.source = source;
         this.line = line;
         this.column = column;
-        this.length = length;
+        this.length = columnEnd - column;
     }
 
     @Override

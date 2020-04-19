@@ -108,6 +108,46 @@ public interface RingelnatterListener extends ParseTreeListener {
 	 */
 	void exitFactor(RingelnatterParser.FactorContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link RingelnatterParser#listfactor}.
+	 * @param ctx the parse tree
+	 */
+	void enterListfactor(RingelnatterParser.ListfactorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RingelnatterParser#listfactor}.
+	 * @param ctx the parse tree
+	 */
+	void exitListfactor(RingelnatterParser.ListfactorContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RingelnatterParser#matchexpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterMatchexpr(RingelnatterParser.MatchexprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RingelnatterParser#matchexpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitMatchexpr(RingelnatterParser.MatchexprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RingelnatterParser#listmatchexpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterListmatchexpr(RingelnatterParser.ListmatchexprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RingelnatterParser#listmatchexpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitListmatchexpr(RingelnatterParser.ListmatchexprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RingelnatterParser#listmatchelementexpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterListmatchelementexpr(RingelnatterParser.ListmatchelementexprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RingelnatterParser#listmatchelementexpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitListmatchelementexpr(RingelnatterParser.ListmatchelementexprContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link RingelnatterParser#typename}.
 	 * @param ctx the parse tree
 	 */

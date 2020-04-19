@@ -102,6 +102,8 @@ public class SimpleTests extends RingelnatterProgramTest {
     public void simpleIs() {
         assertThat (executeExpression("3 is number"), is("1"));
         assertThat (executeExpression("3 is list"), is("0"));
+        assertThat (executeExpression("[] is number"), is("0"));
+        assertThat (executeExpression("[] is list"), is("1"));
     }
 
     @Test

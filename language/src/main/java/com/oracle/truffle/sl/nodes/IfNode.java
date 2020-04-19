@@ -4,7 +4,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.sl.nodes.expression.ConditionalNode;
 
-public class IfNode extends StatementNode {
+public final class IfNode extends StatementNode {
 
     @Child
     private ConditionalNode conditionNode;
@@ -19,7 +19,8 @@ public class IfNode extends StatementNode {
 
     @Override
     public void executeVoid(VirtualFrame frame) {
-        if((boolean) conditionNode.executeGeneric(frame))
+        if((boolean) conditionNode.executeGeneric(frame)) {
             thenPartNode.executeVoid(frame);
+        }
     }
 }

@@ -93,18 +93,27 @@ stmnt: var=IDENTIFIER '=' expression NEWLINE |
 
 expression:
     logical_term |
-    factor ('.' factor)+ |
-    '[' expression? ( ',' expression)* ']';
+    factor ('.' factor)+;
 logical_term: logical_factor (op=('&&' | '||') logical_factor)*;
 logical_factor: arithmetic (op=('==' | '!=' | '>' | '<' | '>=' | '<=') arithmetic)*;
 arithmetic: term (op=('+' | '-') term)*;
 term: factor (op=('*' | '/' | '%') factor)*;
 factor: op='!' factor |
         factor op='is' typename |
+        factor op='matches' matchexpr |
         NUMERIC_LITERAL |
+        listfactor |
         var=IDENTIFIER |
         '(' expression ')' |
         target=IDENTIFIER '(' expression? (',' expression)* ')';
+listfactor: '[' expression? ( ',' expression)* ']';
+matchexpr:
+    NUMERIC_LITERAL |
+    listmatchexpr;
+listmatchexpr: '[' listmatchelementexpr? ( '.' listmatchelementexpr)* ']';
+listmatchelementexpr:
+    matchexpr |
+    IDENTIFIER;
 
 typename: 'number' | 'list';
 /*

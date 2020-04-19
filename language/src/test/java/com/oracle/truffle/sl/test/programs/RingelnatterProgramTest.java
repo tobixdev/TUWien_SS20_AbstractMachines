@@ -11,7 +11,13 @@ public class RingelnatterProgramTest {
         return context.eval(RingelnatterLanguage.ID, program).toString();
     }
 
-    protected String executeExpression(String s) {
-        return executeProgram("fn main():\n" + "  ret " + s + "\n");
+    protected String executeExpression(String expr) {
+        return executeProgram("fn main():\n" + "  ret " + expr + "\n");
+    }
+
+    protected String executeVariableBoundInExpression(String expr, String variableName) {
+        return executeProgram("fn main():\n"+
+                "  if " + expr + ":\n" +
+                "    ret " + variableName);
     }
 }

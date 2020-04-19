@@ -15,7 +15,6 @@ public abstract class WriteLocalVariableNode extends ExpressionNode {
     @Specialization(guards = "isLongOrIllegal(frame)")
     protected long writeLong(VirtualFrame frame, long value) {
         frame.getFrameDescriptor().setFrameSlotKind(getSlot(), FrameSlotKind.Long);
-
         frame.setLong(getSlot(), value);
         return value;
     }
@@ -23,7 +22,6 @@ public abstract class WriteLocalVariableNode extends ExpressionNode {
     @Specialization(replaces = {"writeLong"})
     protected Object write(VirtualFrame frame, Object value) {
         frame.getFrameDescriptor().setFrameSlotKind(getSlot(), FrameSlotKind.Object);
-
         frame.setObject(getSlot(), value);
         return value;
     }

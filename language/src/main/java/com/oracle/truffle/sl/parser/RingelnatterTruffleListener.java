@@ -1,6 +1,5 @@
 package com.oracle.truffle.sl.parser;
 
-import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
@@ -9,12 +8,11 @@ import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.sl.FunctionBodyNode;
 import com.oracle.truffle.sl.RingelnatterLanguage;
 import com.oracle.truffle.sl.RingelnatterRootNode;
+import com.oracle.truffle.sl.matching.*;
 import com.oracle.truffle.sl.nodes.*;
 import com.oracle.truffle.sl.nodes.expression.*;
-import com.oracle.truffle.sl.runtime.ListTruffleObject;
 import com.oracle.truffle.sl.runtime.RingelnatterFunctionRegistry;
 import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.*;
@@ -43,7 +41,6 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
     private List<StatementNode> statementNodes;
 
     // state for suites
-    private boolean autoAddSuite = true;
     private Stack<List<StatementNode>> suites;
     private SuiteNode lastExitedSuite;
 
@@ -62,9 +59,9 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         suites = new Stack<>();
 
         for (int i = 1; i < identifiers.size(); i++) {
-            String parameterName = identifiers.get(i).getText();
+            Token symbol = identifiers.get(i).getSymbol();
             ReadArgumentNode readArgumentNode = new ReadArgumentNode(i - 1);
-            WriteLocalVariableNode writeLocalVariableNode = createLocalVariable(parameterName, readArgumentNode);
+            WriteLocalVariableNode writeLocalVariableNode = createLocalVariable(symbol, readArgumentNode);
             statementNodes.add(writeLocalVariableNode);
         }
     }
@@ -103,13 +100,18 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
     }
 
     @Override
+    public void exitListmatchelementexpr(RingelnatterParser.ListmatchelementexprContext ctx) {
+        if(ctx.IDENTIFIER() != null)
+            findOrAddFrameSlot(ctx.IDENTIFIER().getSymbol());
+    }
+
+    @Override
     public void exitStmnt(RingelnatterParser.StmntContext ctx) {
         List<StatementNode> currentSuite = suites.peek();
         if(ctx.start.getText().equals("ret")) {
             currentSuite.add(new ReturnNode(parseExpression(ctx.expression())));
         } else if(ctx.start.getText().equals("let")) {
-            verifyNonExistenceOfLocal(lexicalScope, ctx.var);
-            currentSuite.add(createLocalVariable(ctx.IDENTIFIER().getText(), parseExpression(ctx.expression())));
+            currentSuite.add(createLocalVariable(ctx.IDENTIFIER().getSymbol(), parseExpression(ctx.expression())));
         } else if(ctx.start.getText().equals("if")){
             ExpressionNode conditionalExpression = parseExpression(ctx.expression());
             currentSuite.remove(lastExitedSuite);
@@ -127,13 +129,13 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         }
     }
 
-    private ExpressionNode parseExpression(RingelnatterParser.ExpressionContext context) {
-        if(context.logical_term() != null) {
-            return parseLogicalTerm(context.logical_term());
-        } else if (context.factor().size() > 0) {
-            return parseConcatenation(context.factor());
+    private ExpressionNode parseExpression(RingelnatterParser.ExpressionContext ctx) {
+        if(ctx.logical_term() != null) {
+            return parseLogicalTerm(ctx.logical_term());
+        } else if (ctx.factor().size() > 0) {
+            return parseConcatenation(ctx.factor());
         }
-        return parseExpressionList(context.expression());
+        throw new UnsupportedOperationException("Cannot parse this kind of expression");
     }
 
     private ExpressionNode parseConcatenation(List<RingelnatterParser.FactorContext> factors) {
@@ -143,96 +145,125 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         return new ConcatNode(list.toArray(new ExpressionNode[0]));
     }
 
-    private ExpressionNode parseExpressionList(List<RingelnatterParser.ExpressionContext> elements) {
-        LinkedList<ExpressionNode> list = new LinkedList<>();
-        for (RingelnatterParser.ExpressionContext element : elements)
-            list.add(parseExpression(element));
-        return new ListValueNode(list);
-    }
+    private ExpressionNode parseLogicalTerm(RingelnatterParser.Logical_termContext ctx){
+        ExpressionNode leftOp = parseLogicalFactor(ctx.logical_factor(0));
 
-    private ExpressionNode parseLogicalTerm(RingelnatterParser.Logical_termContext context){
-        ExpressionNode leftOp = parseLogicalFactor(context.logical_factor(0));
-
-        if(context.logical_factor().size() == 1)
+        if(ctx.logical_factor().size() == 1)
             return leftOp;
 
-        for (int i = 1; i < context.logical_factor().size(); i++) {
-            ExpressionNode rightOp = parseLogicalFactor(context.logical_factor(i));
-            leftOp = createBinary(context.op.getText(), leftOp, rightOp);
+        for (int i = 1; i < ctx.logical_factor().size(); i++) {
+            ExpressionNode rightOp = parseLogicalFactor(ctx.logical_factor(i));
+            leftOp = createBinary(ctx.op.getText(), leftOp, rightOp);
         }
         return leftOp;
     }
 
-    private ExpressionNode parseLogicalFactor(RingelnatterParser.Logical_factorContext context){
-        ExpressionNode leftOp = parseArithmetic(context.arithmetic(0));
+    private ExpressionNode parseLogicalFactor(RingelnatterParser.Logical_factorContext ctx){
+        ExpressionNode leftOp = parseArithmetic(ctx.arithmetic(0));
 
-        if(context.arithmetic().size() == 1)
+        if(ctx.arithmetic().size() == 1)
             return leftOp;
 
-        for (int i = 1; i < context.arithmetic().size(); i++) {
-            ExpressionNode rightOp = parseArithmetic(context.arithmetic(i));
-            leftOp = createBinary(context.op.getText(), leftOp, rightOp);
+        for (int i = 1; i < ctx.arithmetic().size(); i++) {
+            ExpressionNode rightOp = parseArithmetic(ctx.arithmetic(i));
+            leftOp = createBinary(ctx.op.getText(), leftOp, rightOp);
         }
         return leftOp;
     }
 
-    private ExpressionNode parseArithmetic(RingelnatterParser.ArithmeticContext context){
-        ExpressionNode leftOp = parseTerm(context.term(0));
+    private ExpressionNode parseArithmetic(RingelnatterParser.ArithmeticContext ctx){
+        ExpressionNode leftOp = parseTerm(ctx.term(0));
 
-        if(context.term().size() == 1)
+        if(ctx.term().size() == 1)
             return leftOp;
 
-        for (int i = 1; i < context.term().size(); i++) {
-            ExpressionNode rightOp = parseTerm(context.term(i));
-            leftOp = createBinary(context.op.getText(), leftOp, rightOp);
+        for (int i = 1; i < ctx.term().size(); i++) {
+            ExpressionNode rightOp = parseTerm(ctx.term(i));
+            leftOp = createBinary(ctx.op.getText(), leftOp, rightOp);
         }
         return leftOp;
     }
 
-    private ExpressionNode parseTerm (RingelnatterParser.TermContext context){
-        ExpressionNode leftOp = parseFactor(context.factor(0));
+    private ExpressionNode parseTerm (RingelnatterParser.TermContext ctx){
+        ExpressionNode leftOp = parseFactor(ctx.factor(0));
 
-        if(context.factor().size() == 1)
+        if(ctx.factor().size() == 1)
             return leftOp;
 
-        for (int i = 1; i < context.factor().size(); i++) {
-            ExpressionNode rightOp = parseFactor(context.factor(i));
-            leftOp = createBinary(context.op.getText(), leftOp, rightOp);
+        for (int i = 1; i < ctx.factor().size(); i++) {
+            ExpressionNode rightOp = parseFactor(ctx.factor(i));
+            leftOp = createBinary(ctx.op.getText(), leftOp, rightOp);
         }
         return leftOp;
     }
 
-    private ExpressionNode parseFactor(RingelnatterParser.FactorContext context) {
-        if (context.factor() != null){
-            return parseUnaryOperator(context);
-        } else if (context.NUMERIC_LITERAL() != null) {
-            return new LongValueNode(Long.parseLong(context.NUMERIC_LITERAL().getText()));
-        } else if (context.var != null) {
-            verifyExistenceOfLocal(lexicalScope, context.var);
-            FrameSlot slot = frameDescriptor.findFrameSlot(context.var.getText());
+    private ExpressionNode parseFactor(RingelnatterParser.FactorContext ctx) {
+        if (ctx.factor() != null){
+            return parseUnaryOperator(ctx);
+        } else if (ctx.NUMERIC_LITERAL() != null) {
+            return new LongValueNode(Long.parseLong(ctx.NUMERIC_LITERAL().getText()));
+        } else if (ctx.listfactor() != null) {
+            return parseListFactor(ctx.listfactor());
+        } else if (ctx.var != null) {
+            verifyExistenceOfLocal(lexicalScope, ctx.var);
+            FrameSlot slot = frameDescriptor.findFrameSlot(ctx.var.getText());
             return ReadLocalVariableNodeGen.create(slot);
-        } else if (context.target != null) {
-            int argsize = context.expression().size();
+        } else if (ctx.target != null) {
+            int argsize = ctx.expression().size();
             ExpressionNode[] arguments = new ExpressionNode[argsize];
             for (int i = 0; i < argsize; i++) {
-                arguments[i] = parseExpression(context.expression(i));
+                arguments[i] = parseExpression(ctx.expression(i));
             }
-            return new InvokeNode(context.target.getText(), arguments);
-        } else if (context.expression() != null) {
-            return parseExpression(context.expression(0));
+            return new InvokeNode(ctx.target.getText(), arguments);
+        } else if (ctx.expression() != null) {
+            return parseExpression(ctx.expression(0));
         }
 
         throw new UnsupportedOperationException("Factor could not be parsed");
     }
 
-    private ExpressionNode parseUnaryOperator(RingelnatterParser.FactorContext context) {
-        String op = context.op.getText();
-        ExpressionNode inner = parseFactor(context.factor());
+    private ExpressionNode parseListFactor(RingelnatterParser.ListfactorContext ctx) {
+        LinkedList<ExpressionNode> list = new LinkedList<>();
+        for (RingelnatterParser.ExpressionContext element : ctx.expression())
+            list.add(parseExpression(element));
+        return new ListNode(list);
+    }
+
+    private ExpressionNode parseUnaryOperator(RingelnatterParser.FactorContext ctx) {
+        String op = ctx.op.getText();
+        ExpressionNode inner = parseFactor(ctx.factor());
         switch (op){
             case "!": return NotNodeGen.create(inner);
-            case "is": return IsNodeGen.create(context.typename().getText(), inner);
+            case "is": return IsNodeGen.create(ctx.typename().getText(), inner);
+            case "matches": return new MatchesNode(parseMatcher(ctx.matchexpr()), inner);
         }
         throw new UnsupportedOperationException("Operator " + op + " not supported");
+    }
+
+    private Matcher parseMatcher(RingelnatterParser.MatchexprContext ctx) {
+        if(ctx.NUMERIC_LITERAL() != null)
+            return new NumberLiteralMatcher(Long.parseLong(ctx.NUMERIC_LITERAL().getText()));
+        return parseListMatcher(ctx.listmatchexpr());
+    }
+
+    private Matcher parseListMatcher(RingelnatterParser.ListmatchexprContext ctx) {
+        if(ctx.listmatchelementexpr().size() == 0)
+            return new EmptyListMatcher();
+        if(ctx.listmatchelementexpr().size() == 1) {
+            return new SingleElementListMatcher(parseListElementMatcher(ctx.listmatchelementexpr(0)));
+        }
+
+        LinkedList<Matcher> matchers = new LinkedList<>();
+        for (RingelnatterParser.ListmatchelementexprContext elementContext : ctx.listmatchelementexpr()) {
+            matchers.add(parseListElementMatcher(elementContext));
+        }
+        return new ListMatcher(matchers);
+    }
+
+    private Matcher parseListElementMatcher(RingelnatterParser.ListmatchelementexprContext ctx) {
+        if(ctx.IDENTIFIER() != null)
+            return new AnyMatcher(getLocalVariable(ctx.IDENTIFIER().getSymbol()));
+        return parseMatcher(ctx.matchexpr());
     }
 
     private ExpressionNode createBinary (String op, ExpressionNode leftOp, ExpressionNode rightOp){
@@ -271,11 +302,16 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         }
     }
 
-    private WriteLocalVariableNode createLocalVariable(String variableName, ExpressionNode value) {
-        FrameSlot frameSlot = frameDescriptor.addFrameSlot(variableName, FrameSlotKind.Illegal);
-        WriteLocalVariableNode writeLocalVariableNode = WriteLocalVariableNodeGen.create(value, frameSlot);
+    private FrameSlot findOrAddFrameSlot(Token identifier) {
+        String variableName = identifier.getText();
+        FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(variableName, FrameSlotKind.Illegal);
         lexicalScope.locals.put(variableName, frameSlot);
-        return writeLocalVariableNode;
+        return frameSlot;
+    }
+
+    private WriteLocalVariableNode createLocalVariable(Token identifier, ExpressionNode value) {
+        verifyNonExistenceOfLocal(lexicalScope, identifier);
+        return WriteLocalVariableNodeGen.create(value, findOrAddFrameSlot(identifier));
     }
 
     private FrameSlot getLocalVariable(Token identifier) {

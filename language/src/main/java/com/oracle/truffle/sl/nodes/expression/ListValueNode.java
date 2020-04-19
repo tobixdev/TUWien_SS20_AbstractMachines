@@ -7,18 +7,14 @@ import com.oracle.truffle.sl.runtime.ListTruffleObject;
 import java.util.LinkedList;
 
 public final class ListValueNode extends ExpressionNode {
-    private final LinkedList<ExpressionNode> values;
+    private final ListTruffleObject value;
 
-    public ListValueNode(LinkedList<ExpressionNode> value) {
-        this.values = value;
+    public ListValueNode(ListTruffleObject value) {
+        this.value = value;
     }
 
     @Override
     public Object executeGeneric(VirtualFrame frame) {
-        ListTruffleObject list = new ListTruffleObject();
-        for (ExpressionNode expr : values) {
-            list.add(expr.executeGeneric(frame));
-        }
-        return list;
+        return value;
     }
 }
