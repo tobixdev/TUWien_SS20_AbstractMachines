@@ -88,7 +88,7 @@ suite: INDENT (stmnt)+ DEDENT;
 stmnt: var=IDENTIFIER '=' expression NEWLINE |
        'let' var=IDENTIFIER '=' expression NEWLINE |
        'ret' expression NEWLINE |
-       'if' expression ':' NEWLINE suite |
+       'if' expression ':' NEWLINE suite ('elif' expression ':' NEWLINE suite)* ('else' ':' NEWLINE suite)? |
        'while' expression ':' NEWLINE suite;
 
 expression:
