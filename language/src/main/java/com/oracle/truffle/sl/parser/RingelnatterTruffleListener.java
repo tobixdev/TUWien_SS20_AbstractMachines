@@ -145,9 +145,7 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         } else if (ctx.start.getText().equals("let")) {
             currentSuite.add(createLocalVariable(ctx.IDENTIFIER().getSymbol(), parseExpression(ctx.expression(0))));
         } else if (ctx.start.getText().equals("if")) {
-            ExpressionNode conditionalExpression = parseExpression(ctx.expression(0));
-            SuiteCollector suiteCollector = (SuiteCollector) suiteFinalizers.pop();
-            currentSuite.add(new IfNode(ConditionalNodeGen.create(conditionalExpression), suiteCollector.getSuite()));
+            parseIfStatement(ctx);
         } else if (ctx.start.getText().equals("while")) {
             ExpressionNode conditionalExpression = parseExpression(ctx.expression(0));
             SuiteCollector suiteCollector = (SuiteCollector) suiteFinalizers.pop();
@@ -159,6 +157,21 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         } else {
             throw new UnsupportedOperationException("Statement unknown");
         }
+    }
+
+    private void parseIfStatement(RingelnatterParser.StmntContext ctx) {
+        List<SuiteNode> suites = ((SuiteCollector) suiteFinalizers.pop()).suites;
+        StatementNode ifInst = constructIfStatement(ctx.expression(), suites);
+        this.suites.peek().add(ifInst);
+    }
+
+    private StatementNode constructIfStatement(List<RingelnatterParser.ExpressionContext> expression, List<SuiteNode> suites) {
+        if(expression.size() == 0)
+            return suites.size() == 1 ? suites.get(0) : null; // else block
+
+        StatementNode innerNode = constructIfStatement(expression.subList(1, expression.size()), suites.subList(1,suites.size()));
+        ExpressionNode conditionalExpression = parseExpression(expression.get(0));
+        return new IfNode(ConditionalNodeGen.create(conditionalExpression), suites.get(0), innerNode);
     }
 
     private ExpressionNode parseExpression(RingelnatterParser.ExpressionContext ctx) {
@@ -258,7 +271,7 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         LinkedList<ExpressionNode> list = new LinkedList<>();
         for (RingelnatterParser.ExpressionContext element : ctx.expression())
             list.add(parseExpression(element));
-        return new ListNode(list);
+        return new ListNode(list.toArray(new ExpressionNode[0]));
     }
 
     private ExpressionNode parseUnaryOperator(RingelnatterParser.FactorContext ctx) {

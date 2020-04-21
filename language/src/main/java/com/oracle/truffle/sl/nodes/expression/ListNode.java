@@ -7,9 +7,9 @@ import com.oracle.truffle.sl.runtime.ListTruffleObject;
 import java.util.LinkedList;
 
 public final class ListNode extends ExpressionNode {
-    private final LinkedList<ExpressionNode> values;
+    @Children private final ExpressionNode[] values;
 
-    public ListNode(LinkedList<ExpressionNode> value) {
+    public ListNode(ExpressionNode[] value) {
         this.values = value;
     }
 

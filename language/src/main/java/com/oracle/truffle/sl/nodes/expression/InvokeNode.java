@@ -6,7 +6,7 @@ import com.oracle.truffle.sl.RingelnatterLanguage;
 import com.oracle.truffle.sl.nodes.ExpressionNode;
 
 public final class InvokeNode extends ExpressionNode {
-    private String functionName;
+    private final String functionName;
     @Children private final ExpressionNode[] argumentNodes;
 
     public InvokeNode(String functionName, ExpressionNode[] argumentNodes) {
@@ -25,6 +25,6 @@ public final class InvokeNode extends ExpressionNode {
             argumentValues[i] = argumentNodes[i].executeGeneric(frame);
         }
 
-        return target.getRootNode().execute(frame);
+        return target.call(argumentValues);
     }
 }

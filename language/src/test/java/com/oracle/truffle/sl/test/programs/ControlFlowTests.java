@@ -27,6 +27,40 @@ public class ControlFlowTests extends RingelnatterProgramTest {
     }
 
     @Test
+    public void ifelsechain() {
+        String result = executeProgram("fn main():\n" +
+                "  ret [a(1), a(2), a(3), a(0)]\n" +
+                "\n" +
+                "fn a(x):\n" +
+                "  let res = 0\n" +
+                "  if x == 1:\n" +
+                "    res = 101\n" +
+                "  elif x == 2:\n" +
+                "    res = 102\n" +
+                "  elif x > 2:\n" +
+                "    res = 103\n" +
+                "  else:\n" +
+                "    res = 99\n" +
+                "  ret res\n");
+        assertThat (result, is("[101,102,103,99]"));
+    }
+
+    @Test
+    public void ifelsechain_noElse() {
+        String result = executeProgram("fn main():\n" +
+                "  ret [a(1), a(2), a(3), a(0)]\n" +
+                "\n" +
+                "fn a(x):\n" +
+                "  let res = 0\n" +
+                "  if x == 1:\n" +
+                "    res = 101\n" +
+                "  elif x == 2:\n" +
+                "    res = 102\n" +
+                "  ret res\n");
+        assertThat (result, is("[101,102,0,0]"));
+    }
+
+    @Test
     public void whilestmnt_true() {
         String result = executeProgram("fn main():\n" +
                 "  let a = 100\n" +
