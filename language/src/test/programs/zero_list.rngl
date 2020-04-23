@@ -1,0 +1,10 @@
+# [0,0,0,0,0]
+fn main():
+    ret zero_list(5)
+
+fn zero_list(size):
+    let zeros = [];
+    while size:
+        zeros = zeros.[0];
+        size = size - 1;
+    ret zeros;

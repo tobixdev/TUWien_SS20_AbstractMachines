@@ -1,0 +1,8 @@
+# [1,2,1,2,1,2]
+fn main():
+    ret multiply_list([1,2], 3)
+
+fn multiply_list(lst, factor):
+    ret eval:
+        factor <= 0: []
+        _: lst.multiply_list(lst, factor - 1)

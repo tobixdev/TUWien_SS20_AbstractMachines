@@ -64,6 +64,18 @@ public class RingelnatterBaseListener implements RingelnatterListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterMultilineexpression(RingelnatterParser.MultilineexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMultilineexpression(RingelnatterParser.MultilineexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExpression(RingelnatterParser.ExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -179,6 +191,30 @@ public class RingelnatterBaseListener implements RingelnatterListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitListmatchelementexpr(RingelnatterParser.ListmatchelementexprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEvalexpression(RingelnatterParser.EvalexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEvalexpression(RingelnatterParser.EvalexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArm(RingelnatterParser.ArmContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArm(RingelnatterParser.ArmContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

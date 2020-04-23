@@ -1,0 +1,8 @@
+# 1
+fn main():
+    ret head([1,2,3])
+
+fn head(lst):
+    if lst matches [a.tail]:
+        ret a
+    ret 0

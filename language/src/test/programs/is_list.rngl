@@ -1,0 +1,7 @@
+# [0,1,1]
+fn main():
+    let a = [1]
+    ret [is_list(1), is_list([1]), is_list(a)]
+
+fn is_list(a):
+    ret a is list; # Liefert wahr, wenn a eine Liste ist

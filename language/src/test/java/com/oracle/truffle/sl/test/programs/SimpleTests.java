@@ -194,6 +194,29 @@ public class SimpleTests extends RingelnatterProgramTest {
     }
 
     @Test
+    public void eval() {
+        String result = executeProgram("fn main():\n" +
+                "  let x = [10]\n" +
+                "  ret eval:\n" +
+                "    x matches []: 0\n" +
+                "    x matches [9]: 9\n" +
+                "    x matches [a.10]: 11\n" +
+                "    x matches [a]: a\n");
+        assertThat (result, is("10"));
+    }
+
+    @Test
+    public void eval_fallback() {
+        String result = executeProgram("fn main():\n" +
+                "  let x = [10]\n" +
+                "  ret eval:\n" +
+                "    x matches []: 0\n" +
+                "    _: 123");
+        // TODO Error case no match
+        assertThat (result, is("123"));
+    }
+
+    @Test
     public void returnComplexVariables() {
         String result = executeProgram("fn main():\n" +
                 "  let a = 100\n" +

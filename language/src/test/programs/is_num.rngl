@@ -1,0 +1,7 @@
+# [1,0,1]
+fn main():
+    let a = 1
+    ret [is_num(1), is_num([1]), is_num(a)]
+
+fn is_num(a):
+    ret a is number

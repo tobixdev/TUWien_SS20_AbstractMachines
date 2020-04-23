@@ -1,0 +1,15 @@
+# [1,1,1,2,2,2]
+fn main():
+    ret multiply_list([1,2], 3)
+
+fn multiply_list(lst, factor):
+    ret eval:
+        lst matches []: []
+        lst matches [x.tail]: multiply(x, factor).(multiply_list(tail, factor))
+
+fn multiply(to_multiply, factor):
+    let result = []
+    while factor:
+        result = result.to_multiply
+        factor = factor - 1
+    ret result

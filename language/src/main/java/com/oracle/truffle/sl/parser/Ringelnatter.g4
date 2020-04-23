@@ -85,12 +85,13 @@ function: 'fn' IDENTIFIER '(' IDENTIFIER? (',' IDENTIFIER)* '):' NEWLINE suite;
 
 suite: INDENT (stmnt)+ DEDENT;
 
-stmnt: var=IDENTIFIER '=' expression NEWLINE |
-       'let' var=IDENTIFIER '=' expression NEWLINE |
-       'ret' expression NEWLINE |
+stmnt: var=IDENTIFIER '=' multilineexpression |
+       'let' var=IDENTIFIER '=' multilineexpression |
+       'ret' multilineexpression |
        'if' expression ':' NEWLINE suite ('elif' expression ':' NEWLINE suite)* ('else' ':' NEWLINE suite)? |
        'while' expression ':' NEWLINE suite;
 
+multilineexpression: evalexpression | (expression NEWLINE);
 expression:
     logical_term |
     factor ('.' factor)+;
@@ -109,11 +110,14 @@ factor: op='!' factor |
 listfactor: '[' expression? ( ',' expression)* ']';
 matchexpr:
     NUMERIC_LITERAL |
+    IDENTIFIER |
     listmatchexpr;
 listmatchexpr: '[' listmatchelementexpr? ( '.' listmatchelementexpr)* ']';
 listmatchelementexpr:
     matchexpr |
     IDENTIFIER;
+evalexpression: 'eval' ':' NEWLINE INDENT (arm NEWLINE)+ DEDENT;
+arm: (guard=expression | '_') ':' value=expression;
 
 typename: 'number' | 'list';
 /*

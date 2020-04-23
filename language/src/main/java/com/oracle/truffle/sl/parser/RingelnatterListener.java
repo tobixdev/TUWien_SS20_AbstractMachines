@@ -48,6 +48,16 @@ public interface RingelnatterListener extends ParseTreeListener {
 	 */
 	void exitStmnt(RingelnatterParser.StmntContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link RingelnatterParser#multilineexpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultilineexpression(RingelnatterParser.MultilineexpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RingelnatterParser#multilineexpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultilineexpression(RingelnatterParser.MultilineexpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link RingelnatterParser#expression}.
 	 * @param ctx the parse tree
 	 */
@@ -147,6 +157,26 @@ public interface RingelnatterListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitListmatchelementexpr(RingelnatterParser.ListmatchelementexprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RingelnatterParser#evalexpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterEvalexpression(RingelnatterParser.EvalexpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RingelnatterParser#evalexpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitEvalexpression(RingelnatterParser.EvalexpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RingelnatterParser#arm}.
+	 * @param ctx the parse tree
+	 */
+	void enterArm(RingelnatterParser.ArmContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RingelnatterParser#arm}.
+	 * @param ctx the parse tree
+	 */
+	void exitArm(RingelnatterParser.ArmContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link RingelnatterParser#typename}.
 	 * @param ctx the parse tree

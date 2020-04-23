@@ -1,0 +1,6 @@
+# [0,1,63]
+fn main():
+    ret [add(0,0), add(1,0), add(40, 23)]
+
+fn add(a, b):
+    ret a+b # Addiert 2 variablen

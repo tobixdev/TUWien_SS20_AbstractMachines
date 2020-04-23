@@ -63,22 +63,10 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
     private FrameDescriptor frameDescriptor;
     private List<StatementNode> statementNodes;
 
-    // state for suites
-    private Stack<List<StatementNode>> suites;
-    private Stack<SuiteFinalizer> suiteFinalizers;
-
     public RingelnatterTruffleListener(RingelnatterLanguage language, Source source, RingelnatterFunctionRegistry functionRegistry) {
         this.source = source;
         this.language = language;
         this.functionRegistry = functionRegistry;
-        this.suiteFinalizers = new Stack<>();
-        this.suiteFinalizers.add((suite) -> {
-            if (suites.size() > 0) {
-                suites.peek().add(suite);
-            } else {
-                statementNodes.add(suite);
-            }
-        });
     }
 
     @Override
@@ -87,7 +75,6 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         lexicalScope = new LexicalScope(null);
         frameDescriptor = new FrameDescriptor();
         statementNodes = new LinkedList<>();
-        suites = new Stack<>();
 
         for (int i = 1; i < identifiers.size(); i++) {
             Token symbol = identifiers.get(i).getSymbol();
@@ -100,6 +87,7 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
     @Override
     public void exitFunction(RingelnatterParser.FunctionContext ctx) {
         String functionName = ctx.IDENTIFIER(0).getText();
+        statementNodes.add(parseSuite(ctx.suite()));
         FunctionBodyNode body = new FunctionBodyNode(new SuiteNode(statementNodes.toArray(new StatementNode[0])));
         RingelnatterRootNode rootNode = new RingelnatterRootNode(language, frameDescriptor, functionName, body);
         functionRegistry.register(functionName, ctx.IDENTIFIER().size() - 1, Truffle.getRuntime().createCallTarget(rootNode));
@@ -109,69 +97,50 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
         statementNodes = null;
     }
 
-    @Override
-    public void enterSuite(RingelnatterParser.SuiteContext ctx) {
-        lexicalScope = new LexicalScope(lexicalScope);
-        suites.push(new LinkedList<>());
-    }
-
-    @Override
-    public void exitSuite(RingelnatterParser.SuiteContext ctx) {
-        lexicalScope = lexicalScope.outer;
-
-        List<StatementNode> nodes = suites.pop();
-        SuiteNode suite = new SuiteNode(nodes.toArray(new StatementNode[0]));
-        suiteFinalizers.peek().finalize(suite);
-    }
-
-    @Override
-    public void exitListmatchelementexpr(RingelnatterParser.ListmatchelementexprContext ctx) {
-        if (ctx.IDENTIFIER() != null)
-            findOrAddFrameSlot(ctx.IDENTIFIER().getSymbol());
-    }
-
-    @Override
-    public void enterStmnt(RingelnatterParser.StmntContext ctx) {
-        if (ctx.start.getText().equals("if") || ctx.start.getText().equals("while")) {
-            suiteFinalizers.add(new SuiteCollector());
+    public SuiteNode parseSuite(RingelnatterParser.SuiteContext ctx) {
+        LinkedList<StatementNode> statementNodes = new LinkedList<>();
+        for (int i = 0; i < ctx.stmnt().size(); i++) {
+            statementNodes.add(parseStatement(ctx.stmnt(i)));
         }
+        return new SuiteNode(statementNodes.toArray(new StatementNode[0]));
     }
 
-    @Override
-    public void exitStmnt(RingelnatterParser.StmntContext ctx) {
-        List<StatementNode> currentSuite = suites.peek();
+    public StatementNode parseStatement(RingelnatterParser.StmntContext ctx) {
         if (ctx.start.getText().equals("ret")) {
-            currentSuite.add(new ReturnNode(parseExpression(ctx.expression(0))));
+            return new ReturnNode(parseMultilineExpression(ctx.multilineexpression()));
         } else if (ctx.start.getText().equals("let")) {
-            currentSuite.add(createLocalVariable(ctx.IDENTIFIER().getSymbol(), parseExpression(ctx.expression(0))));
+            return createLocalVariable(ctx.IDENTIFIER().getSymbol(), parseMultilineExpression(ctx.multilineexpression()));
         } else if (ctx.start.getText().equals("if")) {
-            parseIfStatement(ctx);
+            return parseIfStatement(ctx);
         } else if (ctx.start.getText().equals("while")) {
             ExpressionNode conditionalExpression = parseExpression(ctx.expression(0));
-            SuiteCollector suiteCollector = (SuiteCollector) suiteFinalizers.pop();
-            currentSuite.add(new WhileNode(ConditionalNodeGen.create(conditionalExpression), suiteCollector.getSuite()));
+            return new WhileNode(ConditionalNodeGen.create(conditionalExpression), parseSuite(ctx.suite(0)));
         } else if (ctx.var != null) {
-            ExpressionNode expression = parseExpression(ctx.expression(0));
+            ExpressionNode expression = parseMultilineExpression(ctx.multilineexpression());
             FrameSlot frameSlot = getLocalVariable(ctx.var);
-            currentSuite.add(WriteLocalVariableNodeGen.create(expression, frameSlot));
+            return WriteLocalVariableNodeGen.create(expression, frameSlot);
         } else {
             throw new UnsupportedOperationException("Statement unknown");
         }
     }
 
-    private void parseIfStatement(RingelnatterParser.StmntContext ctx) {
-        List<SuiteNode> suites = ((SuiteCollector) suiteFinalizers.pop()).suites;
-        StatementNode ifInst = constructIfStatement(ctx.expression(), suites);
-        this.suites.peek().add(ifInst);
+    private StatementNode parseIfStatement(RingelnatterParser.StmntContext ctx) {
+        return constructIfStatement(ctx.expression(), ctx.suite());
     }
 
-    private StatementNode constructIfStatement(List<RingelnatterParser.ExpressionContext> expression, List<SuiteNode> suites) {
-        if(expression.size() == 0)
-            return suites.size() == 1 ? suites.get(0) : null; // else block
+    private StatementNode constructIfStatement(List<RingelnatterParser.ExpressionContext> expression, List<RingelnatterParser.SuiteContext> suites) {
+        if (expression.size() == 0)
+            return suites.size() == 1 ? parseSuite(suites.get(0)) : null; // else block
 
-        StatementNode innerNode = constructIfStatement(expression.subList(1, expression.size()), suites.subList(1,suites.size()));
+        StatementNode innerNode = constructIfStatement(expression.subList(1, expression.size()), suites.subList(1, suites.size()));
         ExpressionNode conditionalExpression = parseExpression(expression.get(0));
-        return new IfNode(ConditionalNodeGen.create(conditionalExpression), suites.get(0), innerNode);
+        return new IfNode(ConditionalNodeGen.create(conditionalExpression), parseSuite(suites.get(0)), innerNode);
+    }
+
+    private ExpressionNode parseMultilineExpression(RingelnatterParser.MultilineexpressionContext ctx) {
+        if (ctx.evalexpression() != null)
+            return parseEvalExpression(ctx.evalexpression());
+        return parseExpression(ctx.expression());
     }
 
     private ExpressionNode parseExpression(RingelnatterParser.ExpressionContext ctx) {
@@ -181,6 +150,22 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
             return parseConcatenation(ctx.factor());
         }
         throw new UnsupportedOperationException("Cannot parse this kind of expression");
+    }
+
+    private ExpressionNode parseEvalExpression(RingelnatterParser.EvalexpressionContext evalexpression) {
+        LinkedList<EvalArmNode> arms = new LinkedList<>();
+        for (int i = 0; i < evalexpression.arm().size(); i++) {
+            arms.add(parseArm(evalexpression.arm(i)));
+        }
+        return new EvalNode(arms.toArray(new EvalArmNode[0]));
+    }
+
+    private EvalArmNode parseArm(RingelnatterParser.ArmContext ctx) {
+        lexicalScope = new LexicalScope(lexicalScope);
+        ExpressionNode guard = ctx.guard != null ? parseExpression(ctx.guard) : new LongValueNode(1);
+        ExpressionNode value = parseExpression(ctx.value);
+        lexicalScope = lexicalScope.outer;
+        return new EvalArmNode(ConditionalNodeGen.create(guard), value);
     }
 
     private ExpressionNode parseConcatenation(List<RingelnatterParser.FactorContext> factors) {
@@ -291,6 +276,10 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
     private Matcher parseMatcher(RingelnatterParser.MatchexprContext ctx) {
         if (ctx.NUMERIC_LITERAL() != null)
             return new NumberLiteralMatcher(Long.parseLong(ctx.NUMERIC_LITERAL().getText()));
+        if (ctx.IDENTIFIER() != null) {
+            findOrAddFrameSlot(ctx.IDENTIFIER().getSymbol());
+            return new AnyMatcher(getLocalVariable(ctx.IDENTIFIER().getSymbol()));
+        }
         return parseListMatcher(ctx.listmatchexpr());
     }
 
@@ -309,8 +298,10 @@ public class RingelnatterTruffleListener extends RingelnatterBaseListener {
     }
 
     private Matcher parseListElementMatcher(RingelnatterParser.ListmatchelementexprContext ctx) {
-        if (ctx.IDENTIFIER() != null)
+        if (ctx.IDENTIFIER() != null) {
+            findOrAddFrameSlot(ctx.IDENTIFIER().getSymbol());
             return new AnyMatcher(getLocalVariable(ctx.IDENTIFIER().getSymbol()));
+        }
         return parseMatcher(ctx.matchexpr());
     }
 

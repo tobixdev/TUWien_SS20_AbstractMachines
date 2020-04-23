@@ -1,0 +1,8 @@
+# [1,1,2,3,5,8]
+fn main():
+    ret [fib(1),fib(2),fib(3),fib(4),fib(5),fib(6)]
+
+fn fib(n):
+    ret eval:
+        n < 3: 1
+        _: fib(n-2) + fib(n-1)

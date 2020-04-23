@@ -1,0 +1,8 @@
+# 5
+fn main():
+    ret len([1,2,3,4,5])
+
+fn len(lst):
+    ret eval:
+        lst matches []: 0
+        lst matches [a.tail]: 1 + len(tail)
