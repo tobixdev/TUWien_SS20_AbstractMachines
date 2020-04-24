@@ -1,8 +1,6 @@
-package com.oracle.truffle.sl.test.programs;
+package com.oracle.truffle.sl.test.programs.ok;
 
 import com.oracle.truffle.sl.RingelnatterLanguage;
-import com.oracle.truffle.sl.parser.RingelnatterLexer;
-import com.oracle.truffle.sl.test.RingelnatterLexerTest;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Source;
 
@@ -14,13 +12,23 @@ import java.nio.file.Paths;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class RingelnatterProgramTest {
-    protected void runRnglFile(String name) throws IOException {
-        Path resourceDirectory = Paths.get("src","test", "programs", name + ".rngl");
-        String expectedOutput = Files.readAllLines(resourceDirectory).get(0).substring(2);
-        Context context = Context.create();
-        Source source = Source.newBuilder(RingelnatterLanguage.ID, resourceDirectory.toFile()).build();
-        assertThat(context.eval(source).toString(), is(expectedOutput));
+public abstract class RingelnatterProgramTest {
+    protected String directory() {
+        return "";
+    }
+
+    protected void runRnglFileWithEmbeddedResult(String name) throws IOException {
+        Path rnglFile = Paths.get("src","test", "programs", directory(), name + ".rngl");
+        String expectedOutput = Files.readAllLines(rnglFile).get(0).substring(2);
+        assertThat(runRnglFile(name), is(expectedOutput));
+    }
+
+    protected String runRnglFile(String name) throws IOException {
+        Path rnglFile = Paths.get("src","test", "programs", directory(), name + ".rngl");
+        try (Context context = Context.create()) {
+            Source source = Source.newBuilder(RingelnatterLanguage.ID, rnglFile.toFile()).build();
+            return context.eval(source).toString();
+        }
     }
 
     protected String executeProgram(String program) {

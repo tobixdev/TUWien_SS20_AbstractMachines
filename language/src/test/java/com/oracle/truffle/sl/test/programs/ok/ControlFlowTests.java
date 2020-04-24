@@ -1,4 +1,4 @@
-package com.oracle.truffle.sl.test.programs;
+package com.oracle.truffle.sl.test.programs.ok;
 
 import org.junit.Test;
 

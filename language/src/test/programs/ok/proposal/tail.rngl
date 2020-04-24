@@ -4,5 +4,5 @@ fn main():
 
 fn tail(lst):
     if lst matches [a.tail]:
-        ret tail;
-    ret [];
+        ret tail
+    ret []

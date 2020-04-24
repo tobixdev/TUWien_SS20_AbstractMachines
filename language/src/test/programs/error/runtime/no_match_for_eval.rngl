@@ -1,0 +1,7 @@
+fn main():
+    ret error_f(100)
+
+fn error_f(a):
+    ret eval:
+        a == 99: 99
+        a == 101: 101

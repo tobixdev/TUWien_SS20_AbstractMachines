@@ -1,67 +1,73 @@
-package com.oracle.truffle.sl.test.programs;
+package com.oracle.truffle.sl.test.programs.ok;
 
 import org.junit.Test;
 
 import java.io.IOException;
 
 public class ProgramsFromProposal extends RingelnatterProgramTest {
+
+    @Override
+    protected String directory() {
+        return "ok/proposal";
+    }
+
     @Test
     public void add() throws IOException {
-        runRnglFile("add");
+        runRnglFileWithEmbeddedResult("add");
     }
 
     @Test
     public void concat() throws IOException {
-        runRnglFile("concat");
+        runRnglFileWithEmbeddedResult("concat");
     }
 
     @Test
     public void is_list() throws IOException {
-        runRnglFile("is_list");
+        runRnglFileWithEmbeddedResult("is_list");
     }
 
     @Test
     public void is_num() throws IOException {
-        runRnglFile("is_num");
+        runRnglFileWithEmbeddedResult("is_num");
     }
 
     @Test
     public void multiply_list() throws IOException {
-        runRnglFile("multiply_list");
+        runRnglFileWithEmbeddedResult("multiply_list");
     }
 
     @Test
     public void multiply_list2() throws IOException {
-        runRnglFile("multiply_list2");
+        runRnglFileWithEmbeddedResult("multiply_list2");
     }
 
     @Test
     public void fib() throws IOException {
-        runRnglFile("fib");
+        runRnglFileWithEmbeddedResult("fib");
     }
 
     @Test
     public void zero_list() throws IOException {
-        runRnglFile("zero_list");
+        runRnglFileWithEmbeddedResult("zero_list");
     }
 
     @Test
     public void split_odd_and_even() throws IOException {
-        runRnglFile("split_odd_and_even");
+        runRnglFileWithEmbeddedResult("split_odd_and_even");
     }
 
     @Test
     public void tail() throws IOException {
-        runRnglFile("tail");
+        runRnglFileWithEmbeddedResult("tail");
     }
 
     @Test
     public void head() throws IOException {
-        runRnglFile("head");
+        runRnglFileWithEmbeddedResult("head");
     }
 
     @Test
     public void len() throws IOException {
-        runRnglFile("len");
+        runRnglFileWithEmbeddedResult("len");
     }
 }

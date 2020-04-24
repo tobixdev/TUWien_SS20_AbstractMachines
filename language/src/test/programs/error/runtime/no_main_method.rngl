@@ -1,0 +1,2 @@
+fn main_alt():
+    ret 1

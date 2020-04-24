@@ -13,17 +13,21 @@ public class RingelnatterParseError extends RuntimeException implements TruffleE
     private final int column;
     private final int length;
 
-    public RingelnatterParseError(Source source, int line, int column, int columnEnd, String message) {
+    public RingelnatterParseError(Source source, int line, int column, int length, String message) {
         super(message);
         this.source = source;
         this.line = line;
         this.column = column;
-        this.length = columnEnd - column;
+        this.length = length;
     }
 
     @Override
     public SourceSection getSourceLocation() {
-        return source.createSection(line, column, length);
+        try {
+            return source.createSection(line, column, length);
+        } catch (Exception ex) {
+            return source.createUnavailableSection();
+        }
     }
 
     @Override

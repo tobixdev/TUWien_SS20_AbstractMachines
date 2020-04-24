@@ -10,6 +10,7 @@ import com.oracle.truffle.sl.parser.RingelnatterLexer;
 import com.oracle.truffle.sl.parser.RingelnatterParser;
 import com.oracle.truffle.sl.parser.RingelnatterTruffleListener;
 import com.oracle.truffle.sl.runtime.RingelnatterContext;
+import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -34,21 +35,34 @@ public final class RingelnatterLanguage extends TruffleLanguage<RingelnatterCont
     }
 
     @Override
-    protected CallTarget parse(ParsingRequest request) throws Exception {
+    protected CallTarget parse(ParsingRequest request) {
         RingelnatterContext context = getCurrentContext(RingelnatterLanguage.class);
         Source source = request.getSource();
-        RingelnatterLexer lexer = new RingelnatterLexer(CharStreams.fromString(source.getCharacters().toString()));
-        RingelnatterParser parser = new RingelnatterParser(new CommonTokenStream(lexer));
+        RingelnatterLexer lexer = createLexer(source);
+        RingelnatterParser parser = createParser(source, lexer);
         RingelnatterTruffleListener listener = new RingelnatterTruffleListener(this, source, context.getFunctionRegistry());
-        parser.addErrorListener(new BailoutErrorListener(source));
         ParseTreeWalker.DEFAULT.walk(listener, parser.ringelnatter());
 
-        RootCallTarget main = context.getFunctionRegistry().lookup("main", 0);
-
-        if(main == null)
+        try {
+            RootCallTarget main = context.getFunctionRegistry().lookup("main", 0);
+            return main;
+        } catch (RingelnatterException ex) {
             throw new RingelnatterException("No main method found");
+        }
+    }
 
-        return main;
+    private RingelnatterLexer createLexer(Source source) {
+        RingelnatterLexer lexer = new RingelnatterLexer(CharStreams.fromString(source.getCharacters().toString()));
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(new BailoutErrorListener(source));
+        return lexer;
+    }
+
+    private RingelnatterParser createParser(Source source, RingelnatterLexer lexer) {
+        RingelnatterParser parser = new RingelnatterParser(new CommonTokenStream(lexer));
+        parser.removeErrorListeners();
+        parser.addErrorListener(new BailoutErrorListener(source));
+        return parser;
     }
 
     @Override
