@@ -1,10 +1,12 @@
 package com.oracle.truffle.sl;
 
+import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.RootNode;
 
 public class RingelnatterRootNode extends RootNode {
+    @CompilerDirectives.CompilationFinal
     private final String name;
     @Child
     private FunctionBodyNode bodyNode;

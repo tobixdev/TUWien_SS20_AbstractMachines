@@ -1,0 +1,26 @@
+fn main():
+    let it = 1000000
+    let lst = [1,3,53,34,24,624,3931,2134,21,34,315,325,24,6,456,2,34,234,234,624,6,234,2,412,34,34,247,34,745,345,3246]
+    let res = 0
+    while it:
+        res = find_max(lst)
+    ret res
+
+fn find_max(lst):
+    if lst matches []:
+        ret 0
+    let max_rest = find_max(tail(lst))
+    let head = head(lst)
+    if max_rest > head:
+        ret max_rest
+    ret head
+
+fn head(lst):
+    if lst matches [a.tail]:
+        ret a
+    ret 0
+
+fn tail(lst):
+    if lst matches [a.tail]:
+        ret tail
+    ret []

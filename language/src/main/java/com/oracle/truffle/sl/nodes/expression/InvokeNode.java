@@ -2,6 +2,7 @@ package com.oracle.truffle.sl.nodes.expression;
 
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.sl.RingelnatterLanguage;
 import com.oracle.truffle.sl.nodes.ExpressionNode;
 
@@ -15,6 +16,7 @@ public final class InvokeNode extends ExpressionNode {
     }
 
     @Override
+    @ExplodeLoop
     public Object executeGeneric(VirtualFrame frame) {
         RootCallTarget target = lookupContextReference(RingelnatterLanguage.class).get()
                 .getFunctionRegistry()

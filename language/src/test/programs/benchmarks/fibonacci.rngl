@@ -1,0 +1,7 @@
+fn main():
+    ret fib(35)
+
+fn fib(n):
+    ret eval:
+        n < 3: 1
+        _: fib(n-2) + fib(n-1)

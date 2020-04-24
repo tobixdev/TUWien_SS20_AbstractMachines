@@ -1,5 +1,6 @@
 package com.oracle.truffle.sl.nodes.expression;
 
+import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.sl.nodes.ExpressionNode;
 import com.oracle.truffle.sl.runtime.ListTruffleObject;

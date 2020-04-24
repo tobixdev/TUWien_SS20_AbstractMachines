@@ -1,6 +1,7 @@
 package com.oracle.truffle.sl.nodes.expression;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.sl.nodes.ExpressionNode;
 import com.oracle.truffle.sl.runtime.ListTruffleObject;
@@ -15,6 +16,7 @@ public final class ConcatNode extends ExpressionNode {
     }
 
     @Override
+    @ExplodeLoop
     public Object executeGeneric(VirtualFrame frame) {
         ListTruffleObject list = new ListTruffleObject();
         for (ExpressionNode child : children) {

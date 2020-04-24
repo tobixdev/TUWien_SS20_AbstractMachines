@@ -1,6 +1,7 @@
 package com.oracle.truffle.sl.nodes.expression;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.sl.RingelnatterException;
 import com.oracle.truffle.sl.nodes.ExpressionNode;
 
@@ -12,6 +13,7 @@ public class EvalNode extends ExpressionNode {
     }
 
     @Override
+    @ExplodeLoop
     public Object executeGeneric(VirtualFrame frame) {
         for (EvalArmNode armNode : arms) {
             if(armNode.doesGuardHold(frame))
