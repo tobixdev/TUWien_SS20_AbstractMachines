@@ -1,0 +1,46 @@
+fn main():
+    let it = 1000
+    let lst = [456,3,53,34,24,624,3931,2134,21,34,315,325,24,6,1,2,34,234,234,624,6,234,2,412,34,34,247,34,745,345,3246]
+    let res = 0
+    while it:
+        res = sort(lst)
+        it = it - 1
+    ret res
+
+# this is not an in-place sort
+fn sort(lst):
+    if lst matches [] || lst matches [a]:
+        ret lst
+
+    let pivot = head(lst)
+    let smaller = smaller_than_or_equal_to(tail(lst),pivot)
+    let bigger = bigger_than(lst,pivot)
+    ret sort(smaller).pivot.sort(bigger)
+
+fn smaller_than_or_equal_to(lst,pivot):
+    let result = []
+    while lst:
+        let h = head(lst)
+        if h <= pivot:
+            result = h.result
+        lst = tail(lst)
+    ret result
+
+fn bigger_than(lst,pivot):
+    let result = []
+    while lst:
+        let h = head(lst)
+        if h > pivot:
+            result = h.result
+        lst = tail(lst)
+    ret result
+
+fn head(lst):
+    if lst matches [a.tail]:
+        ret a
+    ret 0
+
+fn tail(lst):
+    if lst matches [a.tail]:
+        ret tail
+    ret []

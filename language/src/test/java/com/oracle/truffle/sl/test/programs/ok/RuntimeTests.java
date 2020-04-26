@@ -12,7 +12,12 @@ public class RuntimeTests extends RingelnatterProgramTest {
     }
 
     @Test
-    public void noMainMethod() throws IOException {
+    public void noReturn() throws IOException {
         runRnglFileWithEmbeddedResult("no_return");
+    }
+
+    @Test
+    public void listChangedByCalledFunction() throws IOException {
+        runRnglFileWithEmbeddedResult("list_changed_by_called_function");
     }
 }

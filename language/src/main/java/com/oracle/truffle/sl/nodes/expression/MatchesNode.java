@@ -1,5 +1,7 @@
 package com.oracle.truffle.sl.nodes.expression;
 
+import com.oracle.truffle.api.frame.FrameSlot;
+import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.sl.matching.Matcher;
@@ -25,17 +27,22 @@ public final class MatchesNode extends UnaryNode {
         MatchingResult result = matcher.matches(innerResult);
         for (int i = 0; i < result.getMatchedVariables().size(); i++) {
             VariableDefinitions.Entry entry = result.getMatchedVariables().get(i);
-            ExpressionNode valueNode = getValueNode(entry.getObject());
-            WriteLocalVariableNodeGen.create(valueNode, entry.getSlot()).executeGeneric(frame);
+            writeToStackSlot(frame, entry);
         }
         return result.matches() ? (long) 1 : (long) 0;
     }
 
-    protected ExpressionNode getValueNode(Object object){
-        if(object.getClass() == Long.class)
-            return new LongValueNode((long) object);
-        if(object.getClass() == ListTruffleObject.class)
-            return new ListValueNode((ListTruffleObject) object);
-        throw new UnsupportedOperationException("Value type no known.");
+    private void writeToStackSlot(VirtualFrame frame, VariableDefinitions.Entry entry) {
+        Object value = entry.getObject();
+        FrameSlot slot = entry.getSlot();
+        if(value.getClass() == Long.class) {
+            frame.getFrameDescriptor().setFrameSlotKind(slot, FrameSlotKind.Long);
+            frame.setLong(slot, (long) value);
+        } else if (value.getClass() == ListTruffleObject.class) {
+            frame.getFrameDescriptor().setFrameSlotKind(slot, FrameSlotKind.Object);
+            frame.setObject(slot, value);
+        } else {
+            throw new UnsupportedOperationException("Unknown value type");
+        }
     }
 }
